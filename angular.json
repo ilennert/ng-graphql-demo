@@ -124,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ng-graphql-demo"
+    }
+  },
+  "defaultProject": "ng-graphql-demo",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
