@@ -6,14 +6,18 @@ import {
   MetaReducer
 } from '@ngrx/store';
 import { environment } from '../../environments/environment';
+import {storeFreeze} from 'ngrx-store-freeze';
+import {routerReducer} from '@ngrx/router-store';
 
+// tslint:disable-next-line: no-empty-interface
 export interface State {
 
 }
 
 export const reducers: ActionReducerMap<State> = {
-
+  router: routerReducer
 };
 
 
-export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
+export const metaReducers: MetaReducer<State>[] =
+  !environment.production ? [storeFreeze] : [];
