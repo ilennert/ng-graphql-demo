@@ -12,12 +12,12 @@ export interface PetsState extends EntityState<Pet> {
 export const adapter: EntityAdapter<Pet> =
   createEntityAdapter<Pet>();
 
-export const initialAddressesState: PetsState = adapter.getInitialState({
+export const initialPetState: PetsState = adapter.getInitialState({
   loadPending: false
 });
 
 export const reducer = createReducer(
-    initialAddressesState,
+  initialPetState,
     on(petsActions.loadPetInfo, (state) => ({...state, loadPending: false })),
     on(petsActions.petInfoLoaded, (state, { pet }) => {
         return adapter.addOne(pet, state);
@@ -27,7 +27,7 @@ export const reducer = createReducer(
   })
 );
 
-export function sanctuariesReducer(state = initialAddressesState , action: Action): PetsState {
+export function sanctuariesReducer(state = initialPetState , action: Action): PetsState {
   return reducer(state, action);
 }
 
