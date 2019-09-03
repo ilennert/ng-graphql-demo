@@ -1,6 +1,6 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 import { Address } from '../../graphql.schema';
 import * as addressesActions from '../actions/address.action';
@@ -27,7 +27,7 @@ export const reducer = createReducer(
   })
 );
 
-export function sanctuariesReducer(state = initialAddressesState , action: Action): AddressesState {
+export function addressesReducer(state = initialAddressesState , action: Action): AddressesState {
   return reducer(state, action);
 }
 

@@ -1,6 +1,6 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 import { Pet } from '../../model/pet';
 import * as petsActions from '../actions/pet.action';
@@ -27,7 +27,7 @@ export const reducer = createReducer(
   })
 );
 
-export function sanctuariesReducer(state = initialPetState , action: Action): PetsState {
+export function petsReducer(state = initialPetState , action: Action): PetsState {
   return reducer(state, action);
 }
 

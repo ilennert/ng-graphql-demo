@@ -14,13 +14,18 @@ export class AdminEffects {
     loadGraph$ = createEffect(() =>
         this.actions$.pipe(
             ofType(applicationActions.loadSanctuaryInfo),
-            mergeMap(() => this.sanctuaryService.getAllSanctuaryInfo()),
-            switchMap(appGraph => [
-                applicationActions.zonesRetrieved(appGraph.zones),
-                applicationActions.categoriesRetrieved(appGraph.categories),
-                applicationActions.productsRetrieved(appGraph.products),
-                applicationActions.imagesRetrieved(appGraph.images),
-                applicationActions.graphLoaded()
+            mergeMap(() => {
+                applicationActions.loadSanctuaryInfo();
+                applicationActions.loadAddressInfo();
+                applicationActions.loadPetInfo();
+                applicationActions.loadOwnerInfo();
+                return this.sanctuaryService.getAllSanctuaryInfo();
+            }),
+            switchMap(sanctuaryGraph => [
+                applicationActions.addressesInfoLoaded(sanctuaryGraph.addresses),
+                applicationActions.petsInfoLoaded(sanctuaryGraph.pets),
+                applicationActions.historyInfoLoaded(sanctuaryGraph.ranges),
+                applicationActions.sanctuaryInfoLoaded(sanctuaryGraph.sanctuaries)
             ]),
             catchError(err => {
                 console.log('Error loading Catalog Graph ', err);

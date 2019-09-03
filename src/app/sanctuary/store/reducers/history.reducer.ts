@@ -1,6 +1,6 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 import { Range } from '../../model/range';
 import * as historyActions from '../actions/history.action';
@@ -27,7 +27,7 @@ export const reducer = createReducer(
   })
 );
 
-export function sanctuariesReducer(state = initialHistoryState , action: Action): HistoryState {
+export function historyReducer(state = initialHistoryState , action: Action): HistoryState {
   return reducer(state, action);
 }
 

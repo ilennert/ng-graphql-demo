@@ -10,3 +10,8 @@ export const sanctuaryInfoLoaded = createAction(
     '[Sanctuary/API] Sanctuary Info Loaded',
     (sanctuaries: Sanctuary[]) => ({ sanctuaries })
 );
+
+export const graphLoadFail = createAction(
+    '[Sanctuary/API] Graph Load Fail',
+    (err: any) => ({ err })
+);
