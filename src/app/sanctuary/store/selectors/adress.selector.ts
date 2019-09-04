@@ -1,6 +1,21 @@
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 
-import { AddressesState } from '../reducers/address.reducer';
+import * as fromAddress from '../reducers/address.reducer';
 
-export const selectAdderssesState = createFeatureSelector<AddressesState>('addresses');
+export const selectAdderssesState = createFeatureSelector<fromAddress.AddressesState>('addresses');
+
+export const selectAddressById = (id: string) => createSelector(
+    selectAdderssesState,
+    addressesState => addressesState.entities[id]
+);
+
+export const selectAllAddresses = createSelector(
+    selectAdderssesState,
+    fromAddress.selectAll
+);
+
+export const selectAddressByIds = (ids: string[]) => createSelector(
+    selectAllAddresses,
+    addresses => addresses.filter(address => ids.some(ii => address.id === ii))
+);
