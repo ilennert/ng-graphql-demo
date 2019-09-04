@@ -2,6 +2,9 @@ import { Component /*, OnInit */ } from '@angular/core';
 import { Router } from '@angular/router';
 // import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+
+import { State } from '../../reducers';
 // import { map } from 'rxjs/operators';
 // import gql from 'graphql-tag';
 
@@ -36,7 +39,7 @@ export class SanctuaryListComponent /* implements OnInit */ {
   loading: boolean;
   sanctuaries: Observable<PetSanctuary[]>;
 
-  constructor(// private apollo: Apollo,
+  constructor(private store: Store<State>,
               private router: Router) { }
 
   // ngOnInit(): void {
