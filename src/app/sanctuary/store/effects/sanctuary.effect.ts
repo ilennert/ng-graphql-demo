@@ -9,7 +9,7 @@ import * as applicationActions from '../actions';
 import { SanctuaryService } from '../../services/sanctuary.service';
 
 @Injectable()
-export class AdminEffects {
+export class SanctuaryEffects {
 
     loadGraph$ = createEffect(() =>
         this.actions$.pipe(
@@ -19,7 +19,8 @@ export class AdminEffects {
                 applicationActions.loadAddressInfo();
                 applicationActions.loadPetInfo();
                 applicationActions.loadOwnerInfo();
-                return this.sanctuaryService.getAllSanctuaryInfo();
+                const retval = this.sanctuaryService.getAllSanctuaryInfo();
+                return retval;
             }),
             switchMap(sanctuaryGraph => [
                 applicationActions.addressesInfoLoaded(sanctuaryGraph.addresses),
@@ -28,7 +29,7 @@ export class AdminEffects {
                 applicationActions.sanctuaryInfoLoaded(sanctuaryGraph.sanctuaries)
             ]),
             catchError(err => {
-                console.log('Error loading Catalog Graph ', err);
+                console.log('Error loading Sanctuary Graph ', err);
                 return of(applicationActions.graphLoadFail(err));
             })
         )

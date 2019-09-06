@@ -2,9 +2,13 @@ import { Component /*, OnInit */ } from '@angular/core';
 import { Router } from '@angular/router';
 // import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import { State } from '../../reducers';
+import { selectAllSanctuaries } from '../store/selectors';
+import * as fromActions from '../store/actions';
+import { Sanctuary } from '../model/sanctuary';
 // import { map } from 'rxjs/operators';
 // import gql from 'graphql-tag';
 
@@ -37,10 +41,21 @@ import { PetSanctuary } from '../graphql.schema';
 export class SanctuaryListComponent /* implements OnInit */ {
 
   loading: boolean;
-  sanctuaries: Observable<PetSanctuary[]>;
+  sanctuaries$: Observable<Sanctuary[]>;
 
   constructor(private store: Store<State>,
-              private router: Router) { }
+              private router: Router) {
+    const sanctuaries: PetSanctuary[] = [];
+    this.sanctuaries$ = this.store.pipe(
+      select(selectAllSanctuaries),
+      tap(sanctuary => {
+        if (!sanctuary || !sanctuary.length) {
+          this.store.dispatch(fromActions.loadSanctuaryInfo());
+        }
+      }),
+      filter(sanctuary => !!sanctuary)
+    );
+  }
 
   // ngOnInit(): void {
   //   this.sanctuaries = this.apollo.watchQuery<any>({

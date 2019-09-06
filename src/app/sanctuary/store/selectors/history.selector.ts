@@ -5,7 +5,7 @@ import * as fromHistory from '../reducers/history.reducer';
 
 export const selectHistoryState = createFeatureSelector<fromHistory.HistoryState>('history');
 
-export const selectPetById = (id: string) => createSelector(
+export const selectHistoryById = (id: string) => createSelector(
     selectHistoryState,
     historyState => historyState.entities[id]
 );
@@ -15,7 +15,7 @@ export const selectAllHistory = createSelector(
     fromHistory.selectAll
 );
 
-export const selectPetByIds = (ids: string[]) => createSelector(
+export const selectHistoryByIds = (ids: string[]) => createSelector(
     selectAllHistory,
     history => history.filter(range => ids.some(ii => range.id === ii))
 );

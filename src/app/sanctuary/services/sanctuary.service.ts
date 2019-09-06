@@ -64,7 +64,7 @@ export class SanctuaryService {
                         name: p.name,
                         age: p.age,
                         breed: p.breed,
-                        historyIds: p.owners.map(h => {
+                        historyIds: p.owners ? p.owners.map(h => {
                             // history
                             graph.ranges = !graph.ranges ? [] : graph.ranges;
                             graph.ranges.push({
@@ -76,7 +76,7 @@ export class SanctuaryService {
                                 end: h.end
                             });
                             return h.id;
-                        })
+                        }) : []
                     });
                 });
             });
