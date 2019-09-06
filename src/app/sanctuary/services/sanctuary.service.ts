@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
-import { PetSanctuary } from '../graphql.schema';
+import { PetSanctuary, CatOwnerRange } from '../graphql.schema';
 
 const sanctuariesQuery = gql`
   query {
@@ -76,11 +76,16 @@ export class SanctuaryService {
                                 end: h.end
                             });
                             return h.id;
-                        }) : []
+                        }) : this.altOwner(graph)
                     });
                 });
             });
             return graph;
         }));
+    }
+
+    private altOwner(graph: SanctuaryGraph): string[] {
+        graph.ranges = [];
+        return [];
     }
 }

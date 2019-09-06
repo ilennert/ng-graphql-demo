@@ -53,7 +53,10 @@ export class SanctuaryListComponent /* implements OnInit */ {
           this.store.dispatch(fromActions.loadSanctuaryInfo());
         }
       }),
-      filter(sanctuary => !!sanctuary)
+      filter(sanctuary => !!sanctuary),
+      tap(test => {
+        console.log(test);
+      })
     );
   }
 
