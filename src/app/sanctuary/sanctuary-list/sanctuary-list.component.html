@@ -10,8 +10,8 @@
         <tbody>
             <tr class="action" *ngFor="let sanctuary of sanctuaries$ | async" (click)="selectRow(sanctuary.id)">
                 <td>{{sanctuary.name}}</td>
-                <td>{{sanctuary.address.city}}, {{sanctuary.address.stateProv}}</td>
-                <td align="center">{{sanctuary.catInventory.length.toString()}}</td>
+                <td>{{(address$ | async)(sanctuary.addressId).city}}, {{(address$ | async)(sanctuary.addressId).stateProv}}</td>
+                <td align="center">{{sanctuary.petIds.length.toString()}}</td>
             </tr>
         </tbody>
     </table>

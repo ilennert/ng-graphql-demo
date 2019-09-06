@@ -5,9 +5,9 @@ import * as fromAddress from '../reducers/address.reducer';
 
 export const selectAdderssesState = createFeatureSelector<fromAddress.AddressesState>('addresses');
 
-export const selectAddressById = (id: string) => createSelector(
+export const selectAddressById = createSelector(
     selectAdderssesState,
-    addressesState => addressesState.entities[id]
+    addressesState => (id: string) => addressesState.entities[id]
 );
 
 export const selectAllAddresses = createSelector(

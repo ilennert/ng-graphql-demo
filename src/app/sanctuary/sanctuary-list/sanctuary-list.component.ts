@@ -6,9 +6,10 @@ import { filter, map, tap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import { State } from '../../reducers';
-import { selectAllSanctuaries } from '../store/selectors';
+import * as fromSelectors from '../store/selectors';
 import * as fromActions from '../store/actions';
 import { Sanctuary } from '../model/sanctuary';
+import { Address } from '../graphql.schema';
 // import { map } from 'rxjs/operators';
 // import gql from 'graphql-tag';
 
@@ -42,21 +43,22 @@ export class SanctuaryListComponent /* implements OnInit */ {
 
   loading: boolean;
   sanctuaries$: Observable<Sanctuary[]>;
+  address$: Observable<(id: string) => Address>;
 
   constructor(private store: Store<State>,
               private router: Router) {
     const sanctuaries: PetSanctuary[] = [];
     this.sanctuaries$ = this.store.pipe(
-      select(selectAllSanctuaries),
+      select(fromSelectors.selectAllSanctuaries),
       tap(sanctuary => {
         if (!sanctuary || !sanctuary.length) {
           this.store.dispatch(fromActions.loadSanctuaryInfo());
         }
       }),
-      filter(sanctuary => !!sanctuary),
-      tap(test => {
-        console.log(test);
-      })
+      filter(sanctuary => !!sanctuary)
+    );
+    this.address$ = this.store.pipe(
+      select(fromSelectors.selectAddressById)
     );
   }
 
