@@ -1,2 +1,3 @@
-<h2>{{sanctuary.name}}</h2>
+
+<h2 *ngIf="id">{{(sanctuary$ | async)(id).name}}</h2>
 
