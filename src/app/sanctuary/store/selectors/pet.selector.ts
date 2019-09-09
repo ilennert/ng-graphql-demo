@@ -10,6 +10,11 @@ export const selectPetById = (id: string) => createSelector(
     addressesState => addressesState.entities[id]
 );
 
+export const selectPetByIdD = createSelector(
+    selectPetsState,
+    addressesState => (id: string) => addressesState.entities[id]
+);
+
 export const selectAllPets = createSelector(
     selectPetsState,
     fromPet.selectAll

@@ -1,3 +1,21 @@
 
-<h2 *ngIf="id">{{(sanctuary$ | async)(id).name}}</h2>
+<h2>{{(sanctuary$ | async)?.name}}</h2>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th align="left">Name</th>
+                <th align="left">Breed</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="action" *ngFor="let petId of (sanctuary$ | async)?.petIds">
+                <td>{{(pet$ | async)(petId).name}}</td>
+                <td>{{(pet$ | async)(petId).breed}}</td>
+                <td align="center">{{(pet$ | async)(petId).age.toString()}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 

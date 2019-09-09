@@ -1,17 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { EntityDataModule } from '@ngrx/data';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SanctuaryModule } from './sanctuary/sanctuary.module';
-import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { EntityDataModule } from '@ngrx/data';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { EntityDataModule } from '@ngrx/data';
     }),
     EffectsModule.forRoot([AppEffects]),
     StoreRouterConnectingModule.forRoot(),
+    !environment.production ? StoreDevtoolsModule.instrument({ name: 'Sanctuary DevTools For NgRx' }) : [],
     EntityDataModule
   ],
   providers: [],

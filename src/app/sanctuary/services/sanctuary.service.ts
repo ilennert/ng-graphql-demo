@@ -22,6 +22,9 @@ const sanctuariesQuery = gql`
       }
       catInventory {
         id
+        name
+        breed
+        age
       }
     }
   }
