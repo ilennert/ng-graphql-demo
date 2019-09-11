@@ -2,12 +2,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SanctuaryDetailComponent } from './sanctuary-detail/sanctuary-detail.component';
-import { SanctuaryListComponent } from './sanctuary-list/sanctuary-list.component';
+import * as fromContainers from './containers';
 
 const routes: Routes = [
-    { path: '', component: SanctuaryListComponent },
-    { path: 'sanctuary/:id', component: SanctuaryDetailComponent}
+    { path: '', component: fromContainers.SanctuaryListComponent },
+    { path: 'sanctuary/:id', component: fromContainers.SanctuaryDetailComponent},
+    { path: 'pet/:id', component: fromContainers.PetDetailComponent }
 ];
 
 @NgModule({

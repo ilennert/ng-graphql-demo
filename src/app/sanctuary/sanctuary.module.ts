@@ -12,11 +12,10 @@ import { SanctuaryEffects } from '../sanctuary/store/effects/sanctuary.effect';
 import { SanctuaryService } from '../sanctuary/services/sanctuary.service';
 
 import { SanctuaryRoutingModule } from './sanctuary-routing.module';
-import { SanctuaryListComponent } from './sanctuary-list/sanctuary-list.component';
-import { SanctuaryDetailComponent } from './sanctuary-detail/sanctuary-detail.component';
+import * as fromContainers from './containers';
 
 @NgModule({
-  declarations: [SanctuaryListComponent, SanctuaryDetailComponent],
+  declarations: [ ...fromContainers.containers ],
   imports: [
     CommonModule,
     SanctuaryRoutingModule,

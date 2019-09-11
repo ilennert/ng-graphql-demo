@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="action" *ngFor="let petId of (sanctuary$ | async)?.petIds">
+            <tr class="action" *ngFor="let petId of (sanctuary$ | async)?.petIds" (click)="selectRow(petId)">
                 <td>{{(pet$ | async)(petId).name}}</td>
                 <td>{{(pet$ | async)(petId).breed}}</td>
                 <td align="center">{{(pet$ | async)(petId).age.toString()}}</td>
