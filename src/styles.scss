@@ -22,6 +22,10 @@ body {
     margin: 0;
   }
 
+  router-outlet {
+    padding-top: 20px;
+  }
+
   .spacer {
     flex: 1;
   }

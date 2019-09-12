@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
+import { TransferPetForm } from '../model/transfer-pet';
 import { Cat, CatOwnerRange } from '../graphql.schema';
 
 const petsQuery = gql`
@@ -29,6 +30,14 @@ const petsQuery = gql`
                 start
                 end
             }
+        }
+    }
+`;
+
+const changePetOwnership = gql`
+    mutation {
+        changePetOwnership (sanctuaryId: $sanctuaryId, catId: $catId, ownerId: $ownerId) {
+            id
         }
     }
 `;
@@ -69,6 +78,17 @@ export class PetService {
             });
             return graph;
         }));
+    }
+
+    changePetOwnership(transForm: TransferPetForm): Observable<any> {
+        return this.apollo.mutate({
+            mutation: changePetOwnership,
+            variables: {
+                sanctuaryId: transForm.sanctuaryId,
+                catId: transForm.petId,
+                ownerId: transForm.ownerId
+            }
+        });
     }
 
     private altOwner(graph: SanctuaryGraph): string[] {
