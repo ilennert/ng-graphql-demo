@@ -7,12 +7,12 @@ export const selectPetsState = createFeatureSelector<fromPet.PetsState>('pets');
 
 export const selectPetById = (id: string) => createSelector(
     selectPetsState,
-    addressesState => addressesState.entities[id]
+    petsState => petsState.entities[id]
 );
 
 export const selectPetByIdD = createSelector(
     selectPetsState,
-    addressesState => (id: string) => addressesState.entities[id]
+    petsState => (id: string) => petsState.entities[id]
 );
 
 export const selectAllPets = createSelector(
@@ -23,4 +23,9 @@ export const selectAllPets = createSelector(
 export const selectPetByIds = (ids: string[]) => createSelector(
     selectAllPets,
     pets => pets.filter(pet => ids.some(ii => pet.id === ii))
+);
+
+export const selectAllPetsLoaded = createSelector(
+    selectPetsState,
+    petsState => petsState.allLoaded
 );

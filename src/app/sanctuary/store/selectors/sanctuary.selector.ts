@@ -47,12 +47,12 @@ export const selectCurrentSanctuary = createSelector(
 
 export const selectAllSanctuariesLoaded = createSelector(
     selectSanctuariesState,
-    sanctuaryState => sanctuaryState.allSanctuariesLoaded
+    sanctuaryState => sanctuaryState.allLoaded
 );
 
 export const selectAllSanctuariesLoadPending = createSelector(
     selectSanctuariesState,
-    sanctuaryState => sanctuaryState.allSanctuariesLoaded || sanctuaryState.loadPending
+    sanctuaryState => sanctuaryState.allLoaded || sanctuaryState.loadPending
 );
 
 export const selectAllSanctuaryEntities = createSelector(

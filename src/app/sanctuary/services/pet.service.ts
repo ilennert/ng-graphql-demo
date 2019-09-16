@@ -47,7 +47,7 @@ export class PetService {
 
     constructor(private apollo: Apollo) {}
 
-    getAllSanctuaryInfo(): Observable<SanctuaryGraph> {
+    getAllPetInfo(): Observable<SanctuaryGraph> {
         return this.apollo.watchQuery<any>({
             query: petsQuery
         }).valueChanges.pipe(map(pets => {

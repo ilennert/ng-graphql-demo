@@ -7,9 +7,18 @@ export const loadPetInfo = createAction(
     '[SanctuaryListComponent] Load Pet Info'
 );
 
+export const loadFullPetInfo = createAction(
+    '[PetGuard] Load Full Pet Info'
+);
+
 export const petInfoLoaded = createAction(
     '[Sanctuary/API] Pet Info Loaded',
     (pet: Pet) => ({ pet })
+);
+
+export const fullPetsInfoLoaded = createAction(
+    '[Sanctuary/API] Full pet Info Loaded',
+    (pets: Pet[]) => ({ pets })
 );
 
 export const petsInfoLoaded = createAction(

@@ -15,7 +15,6 @@ export class SanctuaryEffects {
         this.actions$.pipe(
             ofType(applicationActions.loadSanctuaryInfo),
             mergeMap(() => {
-                applicationActions.loadSanctuaryInfo();
                 applicationActions.loadAddressInfo();
                 applicationActions.loadPetInfo();
                 applicationActions.loadOwnerInfo();

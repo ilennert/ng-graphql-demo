@@ -6,7 +6,7 @@ import { Sanctuary } from '../../model/sanctuary';
 import * as sanctuariesActions from '../actions/sanctuary.action';
 
 export interface SanctuariesState extends EntityState<Sanctuary> {
-  allSanctuariesLoaded: boolean;
+  allLoaded: boolean;
   loadPending: boolean;
 }
 
@@ -14,15 +14,15 @@ export const adapter: EntityAdapter<Sanctuary> =
   createEntityAdapter<Sanctuary>();
 
 export const initialSanctuariesState: SanctuariesState = adapter.getInitialState({
-  allSanctuariesLoaded: false,
+  allLoaded: false,
   loadPending: false
 });
 
 export const reducer = createReducer(
     initialSanctuariesState,
-    on(sanctuariesActions.loadSanctuaryInfo, (state) => ({...state, allSanctuariesLoaded: false, loadPending: true })),
+    on(sanctuariesActions.loadSanctuaryInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
     on(sanctuariesActions.sanctuaryInfoLoaded, (state, { sanctuaries }) => {
-        return adapter.addAll(sanctuaries, {...state, allSanctuariesLoaded: true, loadPending: false });
+        return adapter.addAll(sanctuaries, {...state, allLoaded: true, loadPending: false });
   })
 );
 
