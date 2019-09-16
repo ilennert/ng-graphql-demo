@@ -8,7 +8,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="action" *ngFor="let sanctuary of sanctuaries$ | async" (click)="selectRow(sanctuary.id)">
+            <tr class="action" *ngFor="let sanctuary of sanctuaries$ | async" (click)="selectRow(sanctuary)">
                 <td>{{sanctuary.name}}</td>
                 <td>{{(address$ | async)(sanctuary.addressId).city}}, {{(address$ | async)(sanctuary.addressId).stateProv}}</td>
                 <td align="center">{{sanctuary.petIds.length.toString()}}</td>

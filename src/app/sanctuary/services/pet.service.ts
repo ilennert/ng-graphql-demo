@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { TransferPetForm } from '../model/transfer-pet';
-import { Cat, CatOwnerRange } from '../graphql.schema';
+import { Cat, CatOwnerRange, TransferPetInput } from '../graphql.schema';
 
 const petsQuery = gql`
     query {
@@ -36,7 +36,7 @@ const petsQuery = gql`
 
 const changePetOwnership = gql`
     mutation {
-        changePetOwnership (sanctuaryId: $sanctuaryId, catId: $catId, ownerId: $ownerId) {
+        changePetOwnership (transferPetInput: $transferPetInput) {
             id
         }
     }
@@ -84,9 +84,7 @@ export class PetService {
         return this.apollo.mutate({
             mutation: changePetOwnership,
             variables: {
-                sanctuaryId: transForm.sanctuaryId,
-                catId: transForm.petId,
-                ownerId: transForm.ownerId
+                transferPetInput: transForm
             }
         });
     }

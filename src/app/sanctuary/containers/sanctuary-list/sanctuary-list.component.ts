@@ -24,23 +24,15 @@ export class SanctuaryListComponent {
   constructor(private store: Store<State>,
               private router: Router) {
     this.sanctuaries$ = this.store.pipe(
-      select(fromSelectors.selectAllSanctuaries),
-      tap(sanctuary => {
-        if (!sanctuary || !sanctuary.length) {
-          this.store.dispatch(fromActions.loadSanctuaryInfo());
-        }
-      }),
-      filter(sanctuary => !!sanctuary),
-      tap(test => {
-        console.log(test);
-      })
+      select(fromSelectors.selectAllSanctuaries)
     );
     this.address$ = this.store.pipe(
       select(fromSelectors.selectAddressById)
     );
   }
 
-  selectRow(id: string): void {
-    this.router.navigateByUrl(`/sanctuary/${id}`);
+  selectRow(sanctuary: Sanctuary): void {
+    this.store.dispatch(fromActions.currentSanctuarySelected(sanctuary));
+    this.router.navigateByUrl(`/sanctuary/${sanctuary.id}`);
   }
 }

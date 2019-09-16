@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { EntityDataModule } from '@ngrx/data';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -12,7 +14,7 @@ import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SanctuaryModule } from './sanctuary/sanctuary.module';
-import { reducers, metaReducers } from './reducers';
+import { reducers, metaReducers, CustomSerializer } from './reducers';
 import { AppEffects } from './app.effects';
 
 @NgModule({
@@ -22,6 +24,8 @@ import { AppEffects } from './app.effects';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    NgbModule,
     GraphQLModule,
     HttpClientModule,
     SanctuaryModule,
@@ -37,7 +41,7 @@ import { AppEffects } from './app.effects';
     !environment.production ? StoreDevtoolsModule.instrument({ name: 'Sanctuary DevTools For NgRx' }) : [],
     EntityDataModule
   ],
-  providers: [],
+  providers: [{ provide: RouterStateSerializer, useClass: CustomSerializer }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

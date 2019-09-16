@@ -2,6 +2,8 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 import * as fromSanctuary from '../reducers/sanctuary.reducer';
+import * as fromRoot from '../../../reducers';
+import { Sanctuary } from '../../model/sanctuary';
 
 export const selectSanctuariesState = createFeatureSelector<fromSanctuary.SanctuariesState>('sanctuaries');
 
@@ -20,7 +22,40 @@ export const selectAllSanctuaries = createSelector(
     fromSanctuary.selectAll
 );
 
+export const selectAllSantuaryEntities = createSelector(
+    selectSanctuariesState,
+    fromSanctuary.selectEntities
+);
+
 export const selectSanctuariesByIdD = createSelector(
     selectAllSanctuaries,
     sanctuaries => (ids: string[]) => sanctuaries.filter(sanctuary => ids.some(ii => sanctuary.id === ii))
+);
+
+export const selectSanctuaryInfoLoadPending = createSelector(
+    selectSanctuariesState,
+    sanctuaryState => sanctuaryState.loadPending
+);
+
+export const selectCurrentSanctuary = createSelector(
+    selectAllSantuaryEntities,
+    fromRoot.getRouterState,
+    (entities, router): Sanctuary => {
+        return router.state && entities[router.state.params.sanctuaryId];
+    }
+);
+
+export const selectAllSanctuariesLoaded = createSelector(
+    selectSanctuariesState,
+    sanctuaryState => sanctuaryState.allSanctuariesLoaded
+);
+
+export const selectAllSanctuariesLoadPending = createSelector(
+    selectSanctuariesState,
+    sanctuaryState => sanctuaryState.allSanctuariesLoaded || sanctuaryState.loadPending
+);
+
+export const selectAllSanctuaryEntities = createSelector(
+    selectSanctuariesState,
+    fromSanctuary.selectEntities
 );
