@@ -15,11 +15,13 @@ export class PetEffects {
         this.actions$.pipe(
             ofType(applicationActions.loadFullPetInfo),
             mergeMap(() => {
+                applicationActions.loadHistoryInfo();
                 const retval = this.petService.getAllPetInfo();
                 return retval;
             }),
             switchMap(sanctuaryGraph => [
-                applicationActions.fullPetsInfoLoaded(sanctuaryGraph.pets),
+                applicationActions.historyInfoLoaded(sanctuaryGraph.ranges),
+                applicationActions.fullPetsInfoLoaded(sanctuaryGraph.pets)
             ]),
             catchError(err => {
                 console.log('Error loading Sanctuary Graph ', err);

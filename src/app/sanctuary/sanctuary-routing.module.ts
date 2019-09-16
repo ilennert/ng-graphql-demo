@@ -23,7 +23,7 @@ const routes: Routes = [
     },
     {
         path: 'pet-transfer/:sanctuaryId',
-        canActivate: [fromGuards.SanctuaryExistsGuard],
+        canActivate: [fromGuards.SanctuaryExistsGuard, fromGuards.PetsGuard],
         component: fromContainers.PetTransferFormComponent
     }
 ];

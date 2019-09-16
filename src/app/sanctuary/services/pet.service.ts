@@ -61,7 +61,7 @@ export class PetService {
                     name: p.name,
                     age: p.age,
                     breed: p.breed,
-                    historyIds: p.owners ? p.owners.map(h => {
+                    historyIds: p.owners && p.owners.length ? p.owners.map(h => {
                         // history
                         graph.ranges = !graph.ranges ? [] : graph.ranges;
                         graph.ranges.push({

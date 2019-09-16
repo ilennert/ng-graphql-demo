@@ -1,6 +1,6 @@
 <h2>Transfer Pet</h2>
 
-<form #f="ngForm">
+<form #f="ngForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
         <select name="petdir" class="form-control" [ngModel]="sancdir" (ngModelChange)="onSancDirChange($event)">
             <option *ngFor="let sdir of sdirs" [ngValue]="sdir.value" [selected]="sdir.value==='to'">
@@ -11,7 +11,16 @@
     <h2>{{(sanctuary$ | async)?.name}}</h2>
     <div class="form-group">
         <label for="formGroupPetInput">Search for pet:</label>
-        <input type="text" class="form-control" id="formGroupPetInput" name="pet" [(ngModel)]="petModel" [ngbTypeahead]="petSearch">
+        <input 
+            type="text" 
+            required
+            class="form-control" 
+            id="formGroupPetInput" 
+            name="pet" 
+            [(ngModel)]="petModel" 
+            [ngbTypeahead]="petSearch" 
+            [resultFormatter]="petFormatter"
+            [inputFormatter]="petShow">
         <hr>
         <pre>Pet: {{ petModel | json }}</pre>
     </div>
@@ -28,4 +37,5 @@
         <hr>
         <pre>Owner: {{ ownerModel | json }}</pre>
     </div>
+    <button type="submit" class="btn btn-success" [disabled]="!f.form.valid">Submit</button>
   </form>
