@@ -26,7 +26,7 @@ export const reducer = createReducer(
         return adapter.addOne(pet, state);
     }),
     on(petsActions.petsInfoLoaded, (state, { pets }) => {
-        return adapter.addAll(pets, {...state, loadPending: false });
+        return adapter.upsertMany(pets, {...state, loadPending: false });
     }),
     on(petsActions.fullPetsInfoLoaded, (state, { pets }) => {
       return adapter.addAll(pets, {...state, allLoaded: true, loadPending: false });

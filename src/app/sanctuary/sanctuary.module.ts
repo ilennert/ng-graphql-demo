@@ -12,7 +12,6 @@ import { addressesReducer } from './store/reducers/address.reducer';
 import { historyReducer } from './store/reducers/history.reducer';
 import { ownersReducer } from './store/reducers/owner.reducer';
 import { petsReducer } from './store/reducers/pet.reducer';
-import { SanctuaryEffects } from './store/effects/sanctuary.effect';
 import * as fromContainers from './containers';
 import * as fromEffects from './store/effects';
 import * as fromGuards from './guards';

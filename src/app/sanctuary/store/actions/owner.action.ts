@@ -6,6 +6,10 @@ export const loadOwnerInfo = createAction(
     '[SanctuaryListComponent] Load Owner Info'
 );
 
+export const loadFullOwnerInfo = createAction(
+    '[Owner Guard] Load Full Owner Info'
+);
+
 export const ownerInfoLoaded = createAction(
     '[Sanctuary/API] Owner Info Loaded',
     (owner: Owner) => ({ owner })
@@ -13,5 +17,10 @@ export const ownerInfoLoaded = createAction(
 
 export const ownersInfoLoaded = createAction(
     '[Sanctuary/API] Owners Info Loaded',
+    (owners: Owner[]) => ({ owners })
+);
+
+export const ownersFullInfoLoaded = createAction(
+    '[Sanctuary/API] Owners Full Info Loaded',
     (owners: Owner[]) => ({ owners })
 );

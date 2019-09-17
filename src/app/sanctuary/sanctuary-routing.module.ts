@@ -8,7 +8,7 @@ import * as fromGuards from './guards';
 const routes: Routes = [
     {
         path: '',
-        canActivate: [fromGuards.SanctuariesGuard],
+        canActivate: [fromGuards.SanctuariesGuard, fromGuards.OwnersGuard, fromGuards.PetsGuard],
         component: fromContainers.SanctuaryListComponent
     },
     {
@@ -18,12 +18,12 @@ const routes: Routes = [
     },
     {
         path: 'pet/:petId',
-        // canActivate: [fromGuards.SanctuaryExistsGuard],
+        canActivate: [fromGuards.PetsGuard],
         component: fromContainers.PetDetailComponent
     },
     {
         path: 'pet-transfer/:sanctuaryId',
-        canActivate: [fromGuards.SanctuaryExistsGuard, fromGuards.PetsGuard],
+        canActivate: [fromGuards.SanctuaryExistsGuard, fromGuards.OwnersGuard, fromGuards.PetsGuard],
         component: fromContainers.PetTransferFormComponent
     }
 ];

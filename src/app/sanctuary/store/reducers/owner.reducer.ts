@@ -6,6 +6,7 @@ import { Owner } from '../../model/owner';
 import * as ownersActions from '../actions/owner.action';
 
 export interface OwnersState extends EntityState<Owner> {
+  allLoaded: boolean;
   loadPending: boolean;
 }
 
@@ -13,18 +14,23 @@ export const adapter: EntityAdapter<Owner> =
   createEntityAdapter<Owner>();
 
 export const initialOwnerState: OwnersState = adapter.getInitialState({
+  allLoaded: false,
   loadPending: false
 });
 
 export const reducer = createReducer(
     initialOwnerState,
-    on(ownersActions.loadOwnerInfo, (state) => ({...state, loadPending: false })),
+    on(ownersActions.loadOwnerInfo, (state) => ({...state, loadPending: true })),
+    on(ownersActions.loadFullOwnerInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
     on(ownersActions.ownerInfoLoaded, (state, { owner }) => {
-        return adapter.addOne(owner, state);
+        return adapter.upsertOne(owner, state);
     }),
     on(ownersActions.ownersInfoLoaded, (state, { owners }) => {
-        return adapter.addAll(owners, {...state, loadPending: false });
-  })
+        return adapter.upsertMany(owners, {...state, loadPending: false });
+    }),
+    on(ownersActions.ownersFullInfoLoaded, (state, { owners }) => {
+      return adapter.addAll(owners, {...state, allLoaded: true, loadPending: false });
+    })
 );
 
 export function ownersReducer(state = initialOwnerState , action: Action): OwnersState {

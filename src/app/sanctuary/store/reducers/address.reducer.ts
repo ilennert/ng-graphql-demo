@@ -18,12 +18,12 @@ export const initialAddressesState: AddressesState = adapter.getInitialState({
 
 export const reducer = createReducer(
     initialAddressesState,
-    on(addressesActions.loadAddressInfo, (state) => ({...state, loadPending: false })),
+    on(addressesActions.loadAddressInfo, (state) => ({...state, loadPending: true })),
     on(addressesActions.addressInfoLoaded, (state, { address }) => {
         return adapter.addOne(address, state);
     }),
     on(addressesActions.addressesInfoLoaded, (state, { addresses }) => {
-        return adapter.addAll(addresses, {...state, loadPending: false });
+        return adapter.upsertMany(addresses, {...state, loadPending: false });
   })
 );
 

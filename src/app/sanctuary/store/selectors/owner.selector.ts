@@ -10,12 +10,17 @@ export const selectOwnerById = (id: string) => createSelector(
     ownersState => ownersState.entities[id]
 );
 
-export const selectAllOwner = createSelector(
+export const selectAllOwners = createSelector(
     selectOwnersState,
     fromOwner.selectAll
 );
 
 export const selectOwnerByIds = (ids: string[]) => createSelector(
-    selectAllOwner,
+    selectAllOwners,
     owners => owners.filter(owner => ids.some(ii => owner.id === ii))
+);
+
+export const selectAllOwnersLoaded = createSelector(
+    selectOwnersState,
+    ownersState => ownersState.allLoaded
 );
