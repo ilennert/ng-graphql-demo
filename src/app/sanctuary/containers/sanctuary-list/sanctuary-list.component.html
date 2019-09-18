@@ -1,18 +1,31 @@
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th align="left">Name</th>
-                <th align="left">City, State</th>
-                <th>Inventory Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="action" *ngFor="let sanctuary of sanctuaries$ | async" (click)="selectRow(sanctuary)">
-                <td>{{sanctuary.name}}</td>
-                <td>{{(address$ | async)(sanctuary.addressId).city}}, {{(address$ | async)(sanctuary.addressId).stateProv}}</td>
-                <td align="center">{{sanctuary.petIds.length.toString()}}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="main-container">
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th align="left">Name</th>
+                    <th align="left">City, State</th>
+                    <th>Inventory Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="action" *ngFor="let sanctuary of sanctuaries$ | async" (click)="selectRow(sanctuary)">
+                    <td>{{sanctuary.name}}</td>
+                    <td>{{(address$ | async)(sanctuary.addressId).city}}, {{(address$ | async)(sanctuary.addressId).stateProv}}</td>
+                    <td align="center">{{sanctuary.petIds.length.toString()}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="form-row button-zone">
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary">Add Sanctuary</button>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary">Add Owner</button>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary">Add Pet</button>
+        </div>
+    </div>
 </div>

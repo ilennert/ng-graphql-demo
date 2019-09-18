@@ -1,4 +1,18 @@
+
+table {
+    width: 90%;
+}
+
 tr.action:hover {
     background-color: #c5c5c5;
     cursor: pointer;
+}
+
+div.main-container {
+    width: 500px;
+}
+
+div.button-zone {
+    padding-top: 20px;
+    padding-bottom: 10px;
 }
