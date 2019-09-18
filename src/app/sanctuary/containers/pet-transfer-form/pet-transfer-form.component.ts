@@ -1,22 +1,14 @@
+
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import * as fromSelectors from '../../store/selectors';
 import { Sanctuary } from '../../model/sanctuary';
+import { Owner } from '../../model/owner';
 import { Pet } from '../../model/pet';
 import { State } from '../../../reducers';
-
-const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
-  'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
-  'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
-  'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
-  'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-  'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
-  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Islands', 'Virginia',
-  'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
 @Component({
   selector: 'app-pet-transfer-form',
@@ -27,7 +19,7 @@ export class PetTransferFormComponent {
 
   sanctuary$: Observable<Sanctuary>;
   pets$: Observable<Pet[]>;
-  transferForm: FormGroup;
+  owners$: Observable<Owner[]>;
   isSubmitted: false;
   public petModel: any;
   public ownerModel: any;
@@ -46,18 +38,23 @@ export class PetTransferFormComponent {
     {name: 'From', value: 'from'}
   ];
 
-  constructor(private store: Store<State>,
-              private formBuilder: FormBuilder) {
+  constructor(private store: Store<State>) {
     this.sanctuary$ = this.store.pipe(
       select(fromSelectors.selectCurrentSanctuary)
     );
     this.pets$ = this.store.pipe(
       select(fromSelectors.selectAllPets)
     );
+    this.owners$ = this.store.pipe(
+      select(fromSelectors.selectAllOwners)
+    );
   }
 
   petFormatter = (result: Pet) => result.name.toUpperCase();
   petShow = (item: Pet) => item.name;
+
+  ownerFormatter = (result: Owner) => result.name.toUpperCase();
+  ownerShow = (item: Owner) => item.name;
 
   petSearch = (text$: Observable<string>) =>
     text$.pipe(
@@ -73,19 +70,23 @@ export class PetTransferFormComponent {
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => term.length < 2 ? []
-        : states.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+      switchMap(term => this.owners$.pipe(map(os => term.length < 2 && term === '*'
+        ? os.slice(0, 10)
+        : term.length < 2 ? []
+        : os.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))))
     )
 
   onSancDirChange(event) {
-    this.ownerSearchCtl = event !== 'to' || this.ownerdir !== 'stray';
     this.sancdir = event;
+    this.ownerdir = event === 'from' ? 'to' : 'from';
+    this.ownerSearchCtl = event !== 'to' || this.ownerdir !== 'stray';
     console.log(event);
   }
 
   onOwnerDirChange(event) {
-    this.ownerSearchCtl = event !== 'stray' || this.sancdir !== 'to';
     this.ownerdir = event;
+    this.sancdir = event === 'from' || event === 'stray' ? 'to' : 'from';
+    this.ownerSearchCtl = event !== 'stray' || this.sancdir !== 'to';
     console.log(event);
   }
 }

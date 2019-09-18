@@ -149,8 +149,12 @@ body {
     z-index: -10;
   }
 
+  a:visited {
+    color: white;
+    text-decoration: none;
+  }
+
   a,
-  a:visited,
   a:hover {
     color: #1976d2;
     text-decoration: none;
