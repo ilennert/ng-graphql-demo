@@ -1,6 +1,7 @@
 
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable, combineLatest } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
@@ -20,12 +21,11 @@ export class PetTransferFormComponent {
   sanctuary$: Observable<Sanctuary>;
   pets$: Observable<Pet[]>;
   owners$: Observable<Owner[]>;
-  isSubmitted: false;
-  public petModel: any;
-  public ownerModel: any;
-  sancdir = 'to';
-  ownerdir = 'stray';
+  isSubmitted = false;
+  petModel: Pet;
+  ownerModel: Owner;
   ownerSearchCtl = false;
+  transferForm: FormGroup;
 
   sdirs = [
     {name: 'To', value: 'to'},
@@ -38,7 +38,8 @@ export class PetTransferFormComponent {
     {name: 'From', value: 'from'}
   ];
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<State>,
+              private formbuilder: FormBuilder) {
     this.sanctuary$ = this.store.pipe(
       select(fromSelectors.selectCurrentSanctuary)
     );
@@ -48,45 +49,82 @@ export class PetTransferFormComponent {
     this.owners$ = this.store.pipe(
       select(fromSelectors.selectAllOwners)
     );
+
+    this.transferForm = this.formbuilder.group({
+      sancdir: ['to', Validators.required],
+      ownerdir: ['stray', Validators.required],
+      petModel: ['', Validators.required ],
+      ownerModel: ['', Validators.required ]
+    });
+    this.formControls['sancdir'].setValue('to');
+    this.formControls['ownerdir'].setValue('stray');
   }
 
+  get formControls() { return this.transferForm.controls; }
+
   petFormatter = (result: Pet) => result.name.toUpperCase();
-  petShow = (item: Pet) => item.name;
+  petShow = (item: Pet) => {
+    this.petModel = item;
+    return item.name;
+  }
 
   ownerFormatter = (result: Owner) => result.name.toUpperCase();
-  ownerShow = (item: Owner) => item.name;
+  ownerShow = (item: Owner) => {
+    this.ownerModel = item;
+    return item.name;
+  }
 
   petSearch = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(term => this.pets$.pipe(map(ps => term.length < 2 && term === '*'
-        ? ps.slice(0, 10)
-        : term.length < 2 ? []
-        : ps.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))))
-    )
+      switchMap(term => combineLatest(this.pets$, this.sanctuary$).pipe(map(([ps, sc]) => {
+        ps = ps.filter(p => this.xor(this.formControls['sancdir'].value, sc.petIds.some(pid => pid === p.id)));
+        ps = term.length < 2 && term === '*'
+          ? ps
+          : term.length < 2 ? []
+          : ps.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1);
+        return ps.slice(0, 10);
+      })))
+  )
 
-    ownerSearch = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.owners$.pipe(map(os => term.length < 2 && term === '*'
-        ? os.slice(0, 10)
-        : term.length < 2 ? []
-        : os.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))))
-    )
+  private xor(swtch: string, ctrl: boolean): boolean {
+    return swtch === 'to' ? !ctrl : !!ctrl;
+  }
 
-  onSancDirChange(event) {
-    this.sancdir = event;
-    this.ownerdir = event === 'from' ? 'to' : 'from';
-    this.ownerSearchCtl = event !== 'to' || this.ownerdir !== 'stray';
+  ownerSearch = (text$: Observable<string>) =>
+  text$.pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(term => this.owners$.pipe(map(os => term.length < 2 && term === '*'
+      ? os.slice(0, 10)
+      : term.length < 2 ? []
+      : os.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))))
+  )
+
+  onSancDirChange(event: string) {
+    const setValue = event === 'from' ? 'to' : 'from';
+    if (this.formControls['ownerdir'].value !== setValue) {
+      this.formControls['ownerdir'].setValue(setValue);
+    }
+    this.ownerSearchCtl = event !== 'to' || this.formControls['ownerdir'].value !== 'stray';
     console.log(event);
   }
 
-  onOwnerDirChange(event) {
-    this.ownerdir = event;
-    this.sancdir = event === 'from' || event === 'stray' ? 'to' : 'from';
-    this.ownerSearchCtl = event !== 'stray' || this.sancdir !== 'to';
+  onOwnerDirChange(event: string) {
+    const setValue = event === 'from' || event === 'stray' ? 'to' : 'from';
+    if (this.formControls['sancdir'].value !== setValue) {
+      this.formControls['sancdir'].setValue(setValue);
+    }
+    this.ownerSearchCtl = event !== 'stray' || this.formControls['sancdir'].value !== 'to';
     console.log(event);
+  }
+
+  onSubmit() {
+    console.log(this.transferForm.value);
+    this.isSubmitted = true;
+    if (this.transferForm.invalid) {
+      return;
+    }
   }
 }

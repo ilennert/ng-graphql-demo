@@ -1,24 +1,23 @@
 <h2>Transfer Pet</h2>
 
-<form #f="ngForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-        <select name="petdir" class="form-control" [ngModel]="sancdir" (ngModelChange)="onSancDirChange($event)">
-            <option *ngFor="let sdir of sdirs" [ngValue]="sdir.value" [selected]="sdir.value==='to'">
+        <select id="sancdir" class="form-control" formControlName="sancdir" (ngModelChange)="onSancDirChange($event)">
+            <option *ngFor="let sdir of sdirs" [ngValue]="sdir.value">
                 {{ sdir.name }}
             </option>
         </select>
     </div>
     <h2>{{(sanctuary$ | async)?.name}}</h2>
     <div class="form-group">
-        <label for="formGroupPetInput">Search for pet:</label>
+        <label for="petModel">Search for pet:</label>
         <input 
             type="text" 
             required
             pattern="[a-zA-Z ]*"
             class="form-control" 
-            id="formGroupPetInput" 
-            name="pet" 
-            [(ngModel)]="petModel" 
+            id="petModel" 
+            formControlName="petModel"
             [ngbTypeahead]="petSearch" 
             [resultFormatter]="petFormatter"
             [inputFormatter]="petShow">
@@ -26,26 +25,25 @@
         <pre>Pet: {{ petModel | json }}</pre>
     </div>
     <div class="form-group">
-        <select name="ownerd" class="form-control" [ngModel]="ownerdir" (ngModelChange)="onOwnerDirChange($event)">
-            <option *ngFor="let odir of odirs" [ngValue]="odir.value" [selected]="odir.value==='stray'">
+        <select id="ownerdir" class="form-control" formControlName="ownerdir" (ngModelChange)="onOwnerDirChange($event)">
+            <option *ngFor="let odir of odirs" [ngValue]="odir.value">
                 {{ odir.name }}
             </option>
         </select>
     </div>
     <div *ngIf="ownerSearchCtl" class="form-group">
-        <label for="formGroupOwnerInput">Search for owner:</label>
+        <label for="ownerModel">Search for owner:</label>
         <input
             type="text"
             pattern="[a-zA-Z ]*"
             class="form-control"
-            id="formGroupOwnerInput"
-            name="owner"
-            [(ngModel)]="ownerModel"
+            id="ownerModel"
+            formControlName="ownerModel"
             [ngbTypeahead]="ownerSearch"
             [resultFormatter]="ownerFormatter"
             [inputFormatter]="ownerShow">
         <hr>
         <pre>Owner: {{ ownerModel | json }}</pre>
     </div>
-    <button type="submit" class="btn btn-success" [disabled]="!f.form.valid">Submit</button>
+    <button type="submit" class="btn btn-success" [disabled]="transferForm.invalid">Submit</button>
   </form>
