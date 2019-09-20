@@ -45,5 +45,5 @@
         <hr>
         <pre>Owner: {{ ownerModel | json }}</pre>
     </div>
-    <button type="submit" class="btn btn-success" [disabled]="transferForm.invalid">Submit</button>
+    <button type="submit" class="btn btn-success" [disabled]="!transferForm.valid">Submit</button>
   </form>
