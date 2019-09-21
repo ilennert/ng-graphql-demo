@@ -13,9 +13,8 @@
         <label for="petModel">Search for pet:</label>
         <input 
             type="text" 
-            required
-            pattern="[a-zA-Z ]*"
             class="form-control" 
+            [ngClass]="{ 'is-invalid': form.petModel.touched && form.petModel.errors }"
             id="petModel" 
             formControlName="petModel"
             [ngbTypeahead]="petSearch" 
@@ -35,7 +34,6 @@
         <label for="ownerModel">Search for owner:</label>
         <input
             type="text"
-            pattern="[a-zA-Z ]*"
             class="form-control"
             id="ownerModel"
             formControlName="ownerModel"
@@ -45,5 +43,12 @@
         <hr>
         <pre>Owner: {{ ownerModel | json }}</pre>
     </div>
-    <button type="submit" class="btn btn-success" [disabled]="!transferForm.valid">Submit</button>
+    <div class="form-row">
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-success" [disabled]="!transferForm.valid">Submit</button>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-secondary" (click)="navBack()">Cancel</button>
+        </div>
+    </div>
   </form>

@@ -1,7 +1,7 @@
 
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
@@ -53,14 +53,14 @@ export class PetTransferFormComponent {
     this.transferForm = this.formbuilder.group({
       sancdir: ['to', Validators.required],
       ownerdir: ['stray', Validators.required],
-      petModel: ['', Validators.required ],
-      ownerModel: ['', Validators.required ]
+      petModel: ['', Validators.required],
+      ownerModel: ['']
     });
-    this.formControls['sancdir'].setValue('to');
-    this.formControls['ownerdir'].setValue('stray');
+    this.form['sancdir'].setValue('to');
+    this.form['ownerdir'].setValue('stray');
   }
 
-  get formControls() { return this.transferForm.controls; }
+  get form() { return this.transferForm.controls; }
 
   petFormatter = (result: Pet) => result.name.toUpperCase();
   petShow = (item: Pet) => {
@@ -79,7 +79,7 @@ export class PetTransferFormComponent {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(term => combineLatest(this.pets$, this.sanctuary$).pipe(map(([ps, sc]) => {
-        ps = ps.filter(p => this.xor(this.formControls['sancdir'].value, sc.petIds.some(pid => pid === p.id)));
+        ps = ps.filter(p => this.xor(this.form['sancdir'].value, sc.petIds.some(pid => pid === p.id)));
         ps = term.length < 2 && term === '*'
           ? ps
           : term.length < 2 ? []
@@ -104,27 +104,47 @@ export class PetTransferFormComponent {
 
   onSancDirChange(event: string) {
     const setValue = event === 'from' ? 'to' : 'from';
-    if (this.formControls['ownerdir'].value !== setValue) {
-      this.formControls['ownerdir'].setValue(setValue);
+    if (this.form['ownerdir'].value !== setValue) {
+      this.form['ownerdir'].setValue(setValue);
     }
-    this.ownerSearchCtl = event !== 'to' || this.formControls['ownerdir'].value !== 'stray';
+    this.setOwnerSearchCtl(event !== 'to' || this.form['ownerdir'].value !== 'stray');
     console.log(event);
   }
 
   onOwnerDirChange(event: string) {
     const setValue = event === 'from' || event === 'stray' ? 'to' : 'from';
-    if (this.formControls['sancdir'].value !== setValue) {
-      this.formControls['sancdir'].setValue(setValue);
+    if (this.form['sancdir'].value !== setValue) {
+      this.form['sancdir'].setValue(setValue);
     }
-    this.ownerSearchCtl = event !== 'stray' || this.formControls['sancdir'].value !== 'to';
+    this.setOwnerSearchCtl(event !== 'stray' || this.form['sancdir'].value !== 'to');
     console.log(event);
+  }
+
+  private setOwnerSearchCtl(flagValue: boolean): void {
+    const was = this.ownerSearchCtl;
+    this.ownerSearchCtl = flagValue;
+    if (flagValue) {
+      this.form['ownerModel'].setValidators(Validators.required);
+    } else if (was !== flagValue) {
+      this.form['ownerModel'].setValidators(null);
+    }
   }
 
   onSubmit() {
     console.log(this.transferForm.value);
-    this.isSubmitted = true;
-    if (this.transferForm.invalid) {
-      return;
-    }
+    this.petSearch(of('*'))
+      .subscribe(pets => {
+        if (pets.some(p => p === this.form['petModel'].value)) {
+          if (this.transferForm.invalid) {
+            return;
+          }
+          this.isSubmitted = true;
+        } else {
+          this.form['petModel'].setErrors({incorrect: true});
+        }
+      });
+  }
+
+  navBack() {
   }
 }

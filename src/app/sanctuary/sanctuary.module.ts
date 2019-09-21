@@ -16,9 +16,13 @@ import * as fromContainers from './containers';
 import * as fromEffects from './store/effects';
 import * as fromGuards from './guards';
 import * as fromServices from './services';
+import { AddEditSanctuaryComponent } from './containers/add-edit-sanctuary/add-edit-sanctuary.component';
+import { AddEditOwnerComponent } from './containers/add-edit-owner/add-edit-owner.component';
+import { AddEditPetComponent } from './containers/add-edit-pet/add-edit-pet.component';
+import { AddEditAddressComponent } from './component/add-edit-address/add-edit-address.component';
 
 @NgModule({
-  declarations: [ ...fromContainers.containers ],
+  declarations: [ ...fromContainers.containers, AddEditSanctuaryComponent, AddEditOwnerComponent, AddEditPetComponent, AddEditAddressComponent ],
   imports: [
     CommonModule,
     FormsModule,
