@@ -10,7 +10,7 @@ import {
   createSelector,
   MetaReducer
 } from '@ngrx/store';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 import * as fromRouter from '@ngrx/router-store';
 

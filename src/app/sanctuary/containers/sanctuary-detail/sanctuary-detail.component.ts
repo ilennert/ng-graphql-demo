@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
-import { State } from '../../../reducers';
+import { State } from '../../../store';
 import { Pet } from '../../model/pet';
 import { Sanctuary } from '../../model/sanctuary';
 import * as fromSelectors from '../../store/selectors';

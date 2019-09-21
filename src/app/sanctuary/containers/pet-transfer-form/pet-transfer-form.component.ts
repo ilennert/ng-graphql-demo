@@ -6,10 +6,11 @@ import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operato
 import { select, Store } from '@ngrx/store';
 
 import * as fromSelectors from '../../store/selectors';
+import * as fromRoot from '../../../store';
 import { Sanctuary } from '../../model/sanctuary';
 import { Owner } from '../../model/owner';
 import { Pet } from '../../model/pet';
-import { State } from '../../../reducers';
+import { State } from '../../../store';
 
 @Component({
   selector: 'app-pet-transfer-form',
@@ -139,6 +140,7 @@ export class PetTransferFormComponent {
             return;
           }
           this.isSubmitted = true;
+          this.store.dispatch(fromRoot.back());
         } else {
           this.form['petModel'].setErrors({incorrect: true});
         }
@@ -146,5 +148,6 @@ export class PetTransferFormComponent {
   }
 
   navBack() {
+    this.store.dispatch(fromRoot.back());
   }
 }

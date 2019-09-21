@@ -14,8 +14,7 @@ import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SanctuaryModule } from './sanctuary/sanctuary.module';
-import { reducers, metaReducers, CustomSerializer } from './reducers';
-import { AppEffects } from './app.effects';
+import { reducers, effects, metaReducers, CustomSerializer } from './store';
 
 @NgModule({
   declarations: [
@@ -36,7 +35,7 @@ import { AppEffects } from './app.effects';
         strictActionImmutability: true
       }
     }),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([ ...effects ]),
     StoreRouterConnectingModule.forRoot(),
     !environment.production ? StoreDevtoolsModule.instrument({ name: 'Sanctuary DevTools For NgRx' }) : [],
     EntityDataModule

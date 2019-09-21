@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
-import { State } from '../../../reducers';
+import { State } from '../../../store';
 import * as fromSelectors from '../../store/selectors';
 import * as fromActions from '../../store/actions';
 import { Sanctuary } from '../../model/sanctuary';

@@ -2,7 +2,7 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 import * as fromSanctuary from '../reducers/sanctuary.reducer';
-import * as fromRoot from '../../../reducers';
+import * as fromRoot from '../../../store';
 import { Sanctuary } from '../../model/sanctuary';
 
 export const selectSanctuariesState = createFeatureSelector<fromSanctuary.SanctuariesState>('sanctuaries');

@@ -6,7 +6,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap, map, filter, take, switchMap } from 'rxjs/operators';
 
-import { State } from '../../reducers';
+import { State } from '../../store';
 import * as fromSelectors from '../store/selectors';
 import * as fromActions from '../store/actions';
 import { Sanctuary } from '../model/sanctuary';
