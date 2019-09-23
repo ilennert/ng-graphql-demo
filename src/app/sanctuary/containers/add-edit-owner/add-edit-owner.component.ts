@@ -17,10 +17,11 @@ export class AddEditOwnerComponent implements OnInit {
 
   ngOnInit() {
     this.ownerForm = this.formbuilder.group({
-      name: ['', Validators.required],
-      // addressId: ['', Validators.required],
-      birthdate: ['']
+      name: [null, Validators.required],
+      birthdate: [null]
     });
+
+    console.log(this.ownerForm);
   }
 
   open() {
@@ -29,6 +30,7 @@ export class AddEditOwnerComponent implements OnInit {
   }
 
   onSubmit() {
+    this.open();
     console.log(this.ownerForm.value);
   }
 }

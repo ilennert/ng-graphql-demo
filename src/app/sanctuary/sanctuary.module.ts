@@ -34,6 +34,7 @@ import * as fromServices from './services';
     StoreModule.forFeature('pets', petsReducer),
     EffectsModule.forFeature([ ...fromEffects.effects ]),
 ],
+entryComponents: [ ...fromComponents.entryComponents ],
 providers: [ ...fromServices.services, ...fromGuards.guards ]
 })
 export class SanctuaryModule { }
