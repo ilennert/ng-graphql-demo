@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
@@ -7,6 +6,7 @@ import { State } from '../../../store';
 import { Pet } from '../../model/pet';
 import { Sanctuary } from '../../model/sanctuary';
 import * as fromSelectors from '../../store/selectors';
+import * as fromRoot from '../../../store';
 
 @Component({
   selector: 'app-sanctuary-detail',
@@ -18,8 +18,7 @@ export class SanctuaryDetailComponent {
   pet$: Observable<(id: string) => Pet>;
   sanctuaryId: string;
 
-  constructor(private store: Store<State>,
-              private router: Router) {
+  constructor(private store: Store<State>) {
     this.sanctuary$ = this.store.pipe(
       select(fromSelectors.selectCurrentSanctuary)
     );
@@ -29,6 +28,6 @@ export class SanctuaryDetailComponent {
   }
 
   selectRow(id: string): void {
-    this.router.navigateByUrl(`/pet/${id}`);
+    this.store.dispatch(fromRoot.go({ path: ['/pet', id]}));
   }
 }

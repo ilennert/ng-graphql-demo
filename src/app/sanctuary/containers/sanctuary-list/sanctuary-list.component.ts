@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
 import { State } from '../../../store';
 import * as fromSelectors from '../../store/selectors';
 import * as fromActions from '../../store/actions';
+import * as fromRoot from '../../../store';
 import { Sanctuary } from '../../model/sanctuary';
 import { Address } from '../../graphql.schema';
 
@@ -20,8 +20,7 @@ export class SanctuaryListComponent {
   sanctuaries$: Observable<Sanctuary[]>;
   address$: Observable<(id: string) => Address>;
 
-  constructor(private store: Store<State>,
-              private router: Router) {
+  constructor(private store: Store<State>) {
     this.sanctuaries$ = this.store.pipe(
       select(fromSelectors.selectAllSanctuaries)
     );
@@ -30,8 +29,20 @@ export class SanctuaryListComponent {
     );
   }
 
+  addOwner() {
+    this.store.dispatch(fromRoot.go({ path: ['/addEditOwner']}));
+  }
+
+  addPet() {
+    this.store.dispatch(fromRoot.go({ path: ['/addEditPet']}));
+  }
+
+  addSanctuary() {
+    this.store.dispatch(fromRoot.go({ path: ['/addEditSanctuary']}));
+  }
+
   selectRow(sanctuary: Sanctuary): void {
     this.store.dispatch(fromActions.currentSanctuarySelected(sanctuary));
-    this.router.navigateByUrl(`/sanctuary/${sanctuary.id}`);
+    this.store.dispatch(fromRoot.go({ path: ['/sanctuary', sanctuary.id]}));
   }
 }

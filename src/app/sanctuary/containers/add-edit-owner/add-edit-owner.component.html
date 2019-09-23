@@ -1,1 +1,18 @@
-<p>add-edit-owner works!</p>
+<form [formGroup]="ownerForm" (ngSubmit)="onSubmit()">
+    <!--<input type="hidden" formControlName="addressId"/>-->
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" formControlName="name" placeholder="Henry">
+    </div>
+    <div class="form-group">
+        <label for="birthdate">Birthdate</label>
+        <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+                    name="birthdate" formControlName="birthdate" ngbDatepicker #d="ngbDatepicker">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!ownerForm.valid">Submit</button>
+</form>
