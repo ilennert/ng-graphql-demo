@@ -1,6 +1,17 @@
 import { createAction } from '@ngrx/store';
 
 import { Sanctuary } from '../../model/sanctuary';
+import { CreatePetSanctuaryInput  } from '../../graphql.schema';
+
+export const createSanctuary = createAction(
+    '[AddEditSanctuaryComponent] Create Sanctuary',
+    (sanctuaryInput: CreatePetSanctuaryInput ) => ({ sanctuaryInput })
+);
+
+export const createOwnerSuccess = createAction(
+    '[Sanctuary/API] Sanctuary Create Success',
+    (sanctuaryId: string) => ({ sanctuaryId })
+);
 
 export const loadSanctuaryInfo = createAction(
     '[SanctuaryListComponent] Load Sanctuary Info'

@@ -1,6 +1,16 @@
 import { createAction } from '@ngrx/store';
 
-import { Address } from '../../graphql.schema';
+import { Address, AddressInput } from '../../graphql.schema';
+
+export const createAddress = createAction(
+    '[AddEditAddressComponent] Create Address',
+    (addressInput: AddressInput) => ({ addressInput })
+);
+
+export const createAddressSuccess = createAction(
+    '[Sanctuary/API] Address Create Success',
+    (addressId: string) => ({ addressId })
+);
 
 export const loadAddressInfo = createAction(
     '[SanctuaryListComponent] Load Address Info'

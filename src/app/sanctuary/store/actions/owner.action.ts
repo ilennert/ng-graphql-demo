@@ -1,6 +1,17 @@
 import { createAction } from '@ngrx/store';
 
 import { Owner } from '../../model/owner';
+import { PersonInput } from '../../graphql.schema';
+
+export const createOwner = createAction(
+    '[AddEditAddressComponent] Create Owner',
+    (personInput: PersonInput) => ({ personInput })
+);
+
+export const createOwnerSuccess = createAction(
+    '[Sanctuary/API] Owner Create Success',
+    (personId: string) => ({ personId })
+);
 
 export const loadOwnerInfo = createAction(
     '[SanctuaryListComponent] Load Owner Info'
