@@ -7,20 +7,22 @@ import * as addressesActions from '../actions/address.action';
 
 export interface AddressesState extends EntityState<Address> {
   loadPending: boolean;
+  lastAdded: Address | null;
 }
 
 export const adapter: EntityAdapter<Address> =
   createEntityAdapter<Address>();
 
 export const initialAddressesState: AddressesState = adapter.getInitialState({
-  loadPending: false
+  loadPending: false,
+  lastAdded: null
 });
 
 export const reducer = createReducer(
     initialAddressesState,
-    on(addressesActions.loadAddressInfo, (state) => ({...state, loadPending: true })),
+    on(addressesActions.loadAddressInfo, addressesActions.createAddress, (state) => ({...state, loadPending: true, lastAdded: null })),
     on(addressesActions.addressInfoLoaded, (state, { address }) => {
-        return adapter.addOne(address, state);
+        return adapter.addOne(address, {...state, loadPending: false, lastAdded: address });
     }),
     on(addressesActions.addressesInfoLoaded, (state, { addresses }) => {
         return adapter.upsertMany(addresses, {...state, loadPending: false });

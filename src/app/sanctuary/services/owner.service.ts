@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { Owner as OwnerModel } from '../model/owner';
 import { Address, AddressInput, Cat, Owner, Person, PersonInput } from '../graphql.schema';
 
-const ownersQuery = gql`
+@Injectable()
+export class OwnerService {
+
+    ownersQuery = gql`
     query {
         people {
             id
@@ -44,45 +47,41 @@ const ownersQuery = gql`
                 }
             }
         }
-    }
-`;
+    }`;
 
-const createPerson = gql`
-    mutation {
-        createPerson (personInput: $personInput) {
-            id
-            name
-            addresses {
+    createPersonMutation = gql`
+        mutation createPerson ($personInput: PersonInput!) {
+            createPerson (personInput: $personInput) {
+                id
+                name
+                addresses {
+                    id
+                    street
+                    stateProv
+                    zipPostal
+                }
+                birthdate
+            }
+        }
+    `;
+
+    createAddressMutation = gql`
+        mutation createAddress($addressInput: AddressInput!) {
+            createAddress(addressInput: $addressInput) {
                 id
                 street
+                city
                 stateProv
                 zipPostal
             }
-            birthdate
         }
-    }
-`;
-
-const createAddress = gql`
-    mutation {
-        createAddress(addressInput: $addressInput) {
-            id
-            street
-            city
-            stateProv
-            zipPostal
-        }
-    }
-`;
-
-@Injectable()
-export class OwnerService {
+    `;
 
     constructor(private apollo: Apollo) {}
 
     getAllOwnerInfo(): Observable<SanctuaryGraph> {
         return this.apollo.watchQuery<any>({
-            query: ownersQuery
+            query: this.ownersQuery
         }).valueChanges.pipe(map(owners => {
             const result: Owner[] = owners.data.people;
             const graph: SanctuaryGraph = {};
@@ -134,20 +133,31 @@ export class OwnerService {
 
     createPerson(personInput: PersonInput): Observable<any> {
         return this.apollo.mutate({
-            mutation: createPerson,
+            mutation: this.createPersonMutation,
             variables: {
                 personInput
             }
-        });
+        }).pipe(
+            tap(data => {
+                console.log(data);
+            })
+        );
     }
 
-    createAddress(addressForm: AddressInput): Observable<any> {
+    createAddress(addressForm: AddressInput): Observable<SanctuaryGraph> {
         return this.apollo.mutate({
-            mutation: createAddress,
+            mutation: this.createAddressMutation,
             variables: {
                 addressInput: addressForm
             }
-        });
+        }).pipe(map(data => {
+                const res: Address = data.data['createAddress'];
+                console.log(res);
+                const graph: SanctuaryGraph = {};
+                graph.addresses = [ res ];
+                return graph;
+            })
+        );
     }
 
     private altPet(graph: SanctuaryGraph): string[] {

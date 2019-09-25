@@ -19,3 +19,8 @@ export const selectAddressByIds = (ids: string[]) => createSelector(
     selectAllAddresses,
     addresses => addresses.filter(address => ids.some(ii => address.id === ii))
 );
+
+export const selectLastAddressLoaded = createSelector(
+    selectAdderssesState,
+    addressesState => addressesState.lastAdded
+);

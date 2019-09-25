@@ -7,11 +7,6 @@ export const createAddress = createAction(
     (addressInput: AddressInput) => ({ addressInput })
 );
 
-export const createAddressSuccess = createAction(
-    '[Sanctuary/API] Address Create Success',
-    (addressId: string) => ({ addressId })
-);
-
 export const loadAddressInfo = createAction(
     '[SanctuaryListComponent] Load Address Info'
 );
