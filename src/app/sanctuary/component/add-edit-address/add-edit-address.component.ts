@@ -1,8 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { Store } from '@ngrx/store';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { states } from 'src/assets/states';
+import { State } from '../../../store';
+import * as appActions from '../../store/actions';
 
 @Component({
   selector: 'app-add-edit-address',
@@ -10,13 +14,16 @@ import { states } from 'src/assets/states';
   styleUrls: ['./add-edit-address.component.scss']
 })
 export class AddEditAddressComponent implements OnInit {
+  @Input() submitted: boolean;
   @Input() addressId: string;
 
   addressForm: FormGroup;
   states = states;
 
   constructor(public activeModal: NgbActiveModal,
-              private formbuilder: FormBuilder) { }
+              private formbuilder: FormBuilder,
+              private store: Store<State>
+              ) { }
 
   ngOnInit() {
     this.addressForm = this.formbuilder.group({
@@ -32,7 +39,7 @@ export class AddEditAddressComponent implements OnInit {
   // }
 
   onSubmit() {
-
+    this.store.dispatch(appActions.createAddress(this.addressForm.value));
   }
 }
 

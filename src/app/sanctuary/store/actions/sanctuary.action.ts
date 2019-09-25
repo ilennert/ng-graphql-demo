@@ -8,7 +8,7 @@ export const createSanctuary = createAction(
     (sanctuaryInput: CreatePetSanctuaryInput ) => ({ sanctuaryInput })
 );
 
-export const createOwnerSuccess = createAction(
+export const createSanctuarySuccess = createAction(
     '[Sanctuary/API] Sanctuary Create Success',
     (sanctuaryId: string) => ({ sanctuaryId })
 );
