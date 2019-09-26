@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+import { select, Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import { Address } from '../../graphql.schema';
+import { Owner } from '../../model/owner';
+import { State } from '../../../store';
 import * as fromComponents from '../../component';
+import * as appSelectors from '../../store/selectors';
 
 @Component({
   selector: 'app-add-edit-owner',
@@ -12,8 +19,19 @@ import * as fromComponents from '../../component';
 export class AddEditOwnerComponent implements OnInit {
   ownerForm: FormGroup;
 
+  lastOwner$: Observable<Owner>;
+  lastAddress$: Observable<Address>;
+
   constructor(private modalService: NgbModal,
-              private formbuilder: FormBuilder) { }
+              private formbuilder: FormBuilder,
+              private store: Store<State>) {
+    this.lastAddress$ = store.pipe(
+      select(appSelectors.selectLastAddressLoaded)
+    );
+    this.lastOwner$ = store.pipe(
+      select(appSelectors.selectLastOwnerLoaded)
+    );
+  }
 
   ngOnInit() {
     this.ownerForm = this.formbuilder.group({

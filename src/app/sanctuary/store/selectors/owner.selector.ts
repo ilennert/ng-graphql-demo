@@ -24,3 +24,8 @@ export const selectAllOwnersLoaded = createSelector(
     selectOwnersState,
     ownersState => ownersState.allLoaded
 );
+
+export const selectLastOwnerLoaded = createSelector(
+    selectOwnersState,
+    ownersState => ownersState.lastAdded
+);
