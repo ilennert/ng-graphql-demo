@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Address } from '../../graphql.schema';
+import { Address, PersonInput } from '../../graphql.schema';
 import { Owner } from '../../model/owner';
 import { states } from 'src/assets/states';
 import { State } from '../../../store';
 import * as fromComponents from '../../component';
 import * as appActions from '../../store/actions';
 import * as appSelectors from '../../store/selectors';
+import * as fromRoot from '../../../store';
 
 @Component({
   selector: 'app-add-edit-owner',
@@ -25,7 +26,7 @@ export class AddEditOwnerComponent implements OnInit {
   lastAddress$: Observable<Address>;
   states = states;
 
-  constructor(private modalService: NgbModal,
+  constructor( // private modalService: NgbModal,
               private formbuilder: FormBuilder,
               private store: Store<State>) {
     this.lastAddress$ = store.pipe(
@@ -37,6 +38,7 @@ export class AddEditOwnerComponent implements OnInit {
   }
 
   ngOnInit() {
+    let init = true;
     this.ownerForm = this.formbuilder.group({
         personGroup: this.formbuilder.group({
           name: [null, Validators.required],
@@ -51,19 +53,41 @@ export class AddEditOwnerComponent implements OnInit {
     });
 
     console.log(this.ownerForm);
+    this.lastAddress$.subscribe(
+      address => {
+        console.log(address, init);
+        if (address && !init) {
+          const inData: PersonInput = {
+            name: this.formPfg['name'].value,
+            addresses: [{ id: address.id}],
+            birthdate: { dateTime: this.formPfg[''].value }
+          };
+          this.store.dispatch(appActions.createOwner(inData));
+        }
+      }
+    );
+
+    init = false;
   }
 
-  get form() { return this.ownerForm.controls; }
+  get formA() { return this.ownerForm.controls['addressGroup'].parent as FormGroup; }
+  get formP() { return this.ownerForm.controls['personGroup'].parent as FormGroup; }
+  get formAfg() { return this.formA.controls; }
+  get formPfg() { return this.formP.controls; }
 
-  open() {
-    const modalRef = this.modalService.open(fromComponents.AddEditAddressComponent);
-    modalRef.componentInstance.addressId = '';
-  }
+  // open() {
+  //   const modalRef = this.modalService.open(fromComponents.AddEditAddressComponent);
+  //   modalRef.componentInstance.addressId = '';
+  // }
 
   onSubmit() {
     // this.open();
-    this.store.dispatch(appActions.createAddress(this.form['addressGroup'].value));
+    this.store.dispatch(appActions.createPersonAddress(this.formA.value));
     console.log(this.ownerForm.value);
+  }
+
+  onCancel(): void {
+    this.store.dispatch(fromRoot.back());
   }
 }
 

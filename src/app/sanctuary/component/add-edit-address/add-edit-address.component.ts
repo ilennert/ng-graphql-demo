@@ -60,7 +60,7 @@ export class AddEditAddressComponent implements OnInit {
   // }
 
   onSubmit() {
-    this.store.dispatch(appActions.createAddress(this.addressForm.value));
+    this.store.dispatch(appActions.createPersonAddress(this.addressForm.value));
   }
 }
 

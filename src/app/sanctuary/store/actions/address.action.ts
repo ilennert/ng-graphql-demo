@@ -2,18 +2,18 @@ import { createAction } from '@ngrx/store';
 
 import { Address, AddressInput } from '../../graphql.schema';
 
-export const createAddress = createAction(
-    '[AddEditAddressComponent] Create Address',
+export const createPersonAddress = createAction(
+    '[AddEditOwnerComponent] Create Address',
     (addressInput: AddressInput) => ({ addressInput })
+);
+
+export const addressPersonInfoLoaded = createAction(
+    '[AddEditOwnerComponent] Address Info Loaded',
+    (address: Address) => ({ address })
 );
 
 export const loadAddressInfo = createAction(
     '[SanctuaryListComponent] Load Address Info'
-);
-
-export const addressInfoLoaded = createAction(
-    '[Sanctuary/API] Address Info Loaded',
-    (address: Address) => ({ address })
 );
 
 export const addressesInfoLoaded = createAction(

@@ -13,12 +13,12 @@ export class AddressEffects {
 
     createAddress$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(applicationActions.createAddress),
+      ofType(applicationActions.createPersonAddress),
       mergeMap(action => this.ownerService.createAddress(action.addressInput)),
       tap(out => {
         console.log(out);
       }),
-      map(sanctuaryGraph => applicationActions.addressInfoLoaded(sanctuaryGraph.addresses[0])),
+      map(sanctuaryGraph => applicationActions.addressPersonInfoLoaded(sanctuaryGraph.addresses[0])),
       catchError(err => {
         console.log('Error loading/creating address entity ', err);
         return of(applicationActions.graphLoadFail(err));

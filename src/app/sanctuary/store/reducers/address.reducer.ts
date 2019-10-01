@@ -20,8 +20,9 @@ export const initialAddressesState: AddressesState = adapter.getInitialState({
 
 export const reducer = createReducer(
     initialAddressesState,
-    on(addressesActions.loadAddressInfo, addressesActions.createAddress, (state) => ({...state, loadPending: true, lastAdded: null })),
-    on(addressesActions.addressInfoLoaded, (state, { address }) => {
+    on(addressesActions.loadAddressInfo, addressesActions.createPersonAddress, (state) =>
+      ({...state, loadPending: true, lastAdded: null })),
+    on(addressesActions.addressPersonInfoLoaded, (state, { address }) => {
         return adapter.addOne(address, {...state, loadPending: false, lastAdded: address });
     }),
     on(addressesActions.addressesInfoLoaded, (state, { addresses }) => {

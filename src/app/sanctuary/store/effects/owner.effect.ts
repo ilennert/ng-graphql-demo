@@ -34,6 +34,21 @@ export class OwnerEffects {
         )
     );
 
+    // createOwner$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(applicationActions.addressPersonInfoLoaded),
+    //         mergeMap(action => {
+    //             const address = action.address;
+    //             const inData: PersonInput = {
+    //                 name: this.formPfg['name'].value,
+    //                 addresses: [{ id: address.id}],
+    //                 birthdate: { dateTime: this.formPfg[''].value }
+    //               };
+    //                     applicationapplicationActions.
+    //         }),
+    //     );
+    // );
+
     constructor(
         private actions$: Actions,
         private ownerService: OwnerService
