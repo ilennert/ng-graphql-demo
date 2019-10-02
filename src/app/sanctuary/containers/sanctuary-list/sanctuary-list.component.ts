@@ -18,13 +18,13 @@ export class SanctuaryListComponent {
 
   loading: boolean;
   sanctuaries$: Observable<Sanctuary[]>;
-  address$: Observable<(id: string) => Address>;
+  addressById$: Observable<(id: string) => Address>;
 
   constructor(private store: Store<State>) {
     this.sanctuaries$ = this.store.pipe(
       select(fromSelectors.selectAllSanctuaries)
     );
-    this.address$ = this.store.pipe(
+    this.addressById$ = this.store.pipe(
       select(fromSelectors.selectAddressById)
     );
   }

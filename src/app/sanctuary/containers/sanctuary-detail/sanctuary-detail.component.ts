@@ -15,14 +15,13 @@ import * as fromRoot from '../../../store';
 })
 export class SanctuaryDetailComponent {
   sanctuary$: Observable<Sanctuary>;
-  pet$: Observable<(id: string) => Pet>;
-  sanctuaryId: string;
+  petById$: Observable<(id: string) => Pet>;
 
   constructor(private store: Store<State>) {
     this.sanctuary$ = this.store.pipe(
       select(fromSelectors.selectCurrentSanctuary)
     );
-    this.pet$ = this.store.pipe(
+    this.petById$ = this.store.pipe(
       select(fromSelectors.selectPetByIdD)
     );
   }

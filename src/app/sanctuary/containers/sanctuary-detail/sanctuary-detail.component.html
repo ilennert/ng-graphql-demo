@@ -1,24 +1,25 @@
 
-<h2>{{(sanctuary$ | async)?.name}}</h2>
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th align="left">Name</th>
-                <th align="left">Breed</th>
-                <th>Age</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="action" *ngFor="let petId of (sanctuary$ | async)?.petIds" (click)="selectRow(petId)">
-                <td>{{(pet$ | async)(petId).name}}</td>
-                <td>{{(pet$ | async)(petId).breed}}</td>
-                <td align="center">{{(pet$ | async)(petId).age.toString()}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="footer">
-        <a [routerLink]="['/pet-transfer', (sanctuary$ | async)?.id]" class="btn btn-primary" role="button">Transfer Pet</a>
+<div *ngIf="sanctuary$ | async as sanctuary">
+    <h2>{{ sanctuary.name }}</h2>
+    <div *ngIf="petById$ | async as petById">
+        <table>
+            <thead>
+                <tr>
+                    <th align="left">Name</th>
+                    <th align="left">Breed</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="action" *ngFor="let petId of sanctuary.petIds" (click)="selectRow(petId)">
+                    <td>{{ petById(petId).name }}</td>
+                    <td>{{ petById(petId).breed }}</td>
+                    <td align="center">{{ petById(petId).age.toString() }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer">
+            <a [routerLink]="['/pet-transfer', sanctuary.id]" class="btn btn-primary" role="button">Transfer Pet</a>
+        </div>
     </div>
 </div>
-
