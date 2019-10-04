@@ -4,13 +4,13 @@ import { Owner } from '../../model/owner';
 import { PersonInput } from '../../graphql.schema';
 
 export const createOwner = createAction(
-    '[AddEditAddressComponent] Create Owner',
+    '[AddEditOwnerComponent] Create Owner',
     (personInput: PersonInput) => ({ personInput })
 );
 
 export const createOwnerSuccess = createAction(
     '[Sanctuary/API] Owner Create Success',
-    (personId: string) => ({ personId })
+    (owner: Owner) => ({ owner })
 );
 
 export const loadOwnerInfo = createAction(

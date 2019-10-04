@@ -7,7 +7,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { Owner as OwnerModel } from '../model/owner';
-import { Address, AddressInput, Cat, Owner, Person, PersonInput } from '../graphql.schema';
+import { AddressInput, Owner, Person, PersonInput } from '../graphql.schema';
 
 @Injectable()
 export class OwnerService {
@@ -131,15 +131,19 @@ export class OwnerService {
         }));
     }
 
-    createPerson(personInput: PersonInput): Observable<any> {
+    createPerson(personInput: PersonInput): Observable<SanctuaryGraph> {
         return this.apollo.mutate({
             mutation: this.createPersonMutation,
             variables: {
                 personInput
             }
         }).pipe(
-            tap(data => {
-                console.log(data);
+            map(data => {
+                const res: Person = data.data['createPerson'];
+                console.log(res);
+                const graph: SanctuaryGraph = {};
+                graph.owners = [ { ...res, addressIds: res.addresses.map(a => (a.id)) } ];
+                return graph;
             })
         );
     }
@@ -151,10 +155,10 @@ export class OwnerService {
                 addressInput: addressForm
             }
         }).pipe(map(data => {
-                const res: Address = data.data['createAddress'];
+                const res: OwnerModel = data.data['createAddress'];
                 console.log(res);
                 const graph: SanctuaryGraph = {};
-                graph.addresses = [ res ];
+                graph.owners = [ res ];
                 return graph;
             })
         );

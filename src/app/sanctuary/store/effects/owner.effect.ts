@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { mergeMap, switchMap, catchError } from 'rxjs/operators';
+import { map, mergeMap, switchMap, catchError, tap } from 'rxjs/operators';
 
 import * as applicationActions from '../actions';
+import * as rootStore from '../../../store';
 import { OwnerService } from '../../services/owner.service';
 
 @Injectable()
@@ -34,20 +35,27 @@ export class OwnerEffects {
         )
     );
 
-    // createOwner$ = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(applicationActions.addressPersonInfoLoaded),
-    //         mergeMap(action => {
-    //             const address = action.address;
-    //             const inData: PersonInput = {
-    //                 name: this.formPfg['name'].value,
-    //                 addresses: [{ id: address.id}],
-    //                 birthdate: { dateTime: this.formPfg[''].value }
-    //               };
-    //                     applicationapplicationActions.
-    //         }),
-    //     );
-    // );
+    createOwner$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.createOwner),
+            mergeMap(action => this.ownerService.createPerson(action.personInput)),
+            tap(out => {
+                console.log(out);
+            }),
+            map(sanctuaryGraph => applicationActions.createOwnerSuccess(sanctuaryGraph.owners[0])),
+            catchError(err => {
+              console.log('Error loading/creating address entity ', err);
+              return of(applicationActions.graphLoadFail(err));
+            })
+        )
+    );
+
+    success$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.ownerInfoLoaded),
+            map(action => rootStore.back())
+        )
+    );
 
     constructor(
         private actions$: Actions,
