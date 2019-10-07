@@ -6,8 +6,7 @@ import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
-import { Owner as OwnerModel } from '../model/owner';
-import { AddressInput, Owner, Person, PersonInput } from '../graphql.schema';
+import { Address, AddressInput, Owner, Person, PersonInput } from '../graphql.schema';
 
 @Injectable()
 export class OwnerService {
@@ -155,10 +154,10 @@ export class OwnerService {
                 addressInput: addressForm
             }
         }).pipe(map(data => {
-                const res: OwnerModel = data.data['createAddress'];
+                const res: Address = data.data['createAddress'];
                 console.log(res);
                 const graph: SanctuaryGraph = {};
-                graph.owners = [ res ];
+                graph.addresses = [ res ];
                 return graph;
             })
         );

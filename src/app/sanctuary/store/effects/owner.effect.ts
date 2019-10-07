@@ -52,7 +52,7 @@ export class OwnerEffects {
 
     success$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(applicationActions.ownerInfoLoaded),
+            ofType(applicationActions.createOwnerSuccess),
             map(action => rootStore.back())
         )
     );

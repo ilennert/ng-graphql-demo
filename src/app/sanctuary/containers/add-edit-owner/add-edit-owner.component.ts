@@ -25,6 +25,7 @@ export class AddEditOwnerComponent implements OnInit {
   lastOwner$: Observable<Owner>;
   lastAddress$: Observable<Address>;
   states = states;
+  tempOwn: PersonInput;
 
   constructor( // private modalService: NgbModal,
               private formbuilder: FormBuilder,
@@ -58,10 +59,11 @@ export class AddEditOwnerComponent implements OnInit {
         console.log(address, init);
         if (address && !init) {
           const inData: PersonInput = {
-            name: this.formPfg['name'].value,
+            name: this.tempOwn.name,
             addresses: [{ id: address.id}],
-            birthdate: { dateTime: this.formPfg[''].value }
+            birthdate: this.tempOwn.birthdate
           };
+          this.tempOwn.addresses = [{ id: address.id}];
           this.store.dispatch(appActions.createOwner(inData));
         }
       }
@@ -70,10 +72,9 @@ export class AddEditOwnerComponent implements OnInit {
     init = false;
   }
 
-  get formA() { return this.ownerForm.controls['addressGroup'].parent as FormGroup; }
-  get formP() { return this.ownerForm.controls['personGroup'].parent as FormGroup; }
-  get formAfg() { return this.formA.controls; }
-  get formPfg() { return this.formP.controls; }
+  get formA() { return this.ownerForm.controls['addressGroup'] as FormGroup; }
+  get formP() { return this.ownerForm.controls['personGroup'] as FormGroup; }
+  get formPgp() { return this.formP.controls; }
 
   // open() {
   //   const modalRef = this.modalService.open(fromComponents.AddEditAddressComponent);
@@ -82,6 +83,12 @@ export class AddEditOwnerComponent implements OnInit {
 
   onSubmit() {
     // this.open();
+    const birthdate = this.formPgp['birthdate'].value;
+    this.tempOwn = {
+      name: this.formPgp['name'].value,
+      addresses: [],
+      birthdate: { year: birthdate.year, month: birthdate.month, day: birthdate.day }
+    };
     this.store.dispatch(appActions.createPersonAddress(this.formA.value));
     console.log(this.ownerForm.value);
   }
