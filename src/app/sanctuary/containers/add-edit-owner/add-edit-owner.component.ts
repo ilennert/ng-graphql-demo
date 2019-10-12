@@ -53,7 +53,6 @@ export class AddEditOwnerComponent implements OnInit {
         })
     });
 
-    console.log(this.ownerForm);
     this.lastAddress$.subscribe(
       address => {
         console.log(address, init);
@@ -68,18 +67,12 @@ export class AddEditOwnerComponent implements OnInit {
         }
       }
     );
-
     init = false;
   }
 
   get formA() { return this.ownerForm.controls['addressGroup'] as FormGroup; }
   get formP() { return this.ownerForm.controls['personGroup'] as FormGroup; }
   get formPgp() { return this.formP.controls; }
-
-  // open() {
-  //   const modalRef = this.modalService.open(fromComponents.AddEditAddressComponent);
-  //   modalRef.componentInstance.addressId = '';
-  // }
 
   onSubmit() {
     // this.open();
