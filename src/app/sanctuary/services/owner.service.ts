@@ -24,14 +24,14 @@ export class OwnerService {
                 zipPostal
             }
             birthdate
-            cats {
+            pets {
                 id
                 name
                 age
                 breed
                 owners {
                     id
-                    cat {
+                    pet {
                         id
                     }
                     owner {
@@ -102,7 +102,7 @@ export class OwnerService {
                         });
                         return a.id;
                     }) : this.altAddress(graph),
-                    catIds: o.cats && o.cats.length ? o.cats.map(c => {
+                    petIds: o.pets && o.pets.length ? o.pets.map(c => {
                         graph.pets = !graph.pets ? [] : graph.pets;
                         graph.pets.push({
                             id: c.id,
@@ -113,7 +113,7 @@ export class OwnerService {
                                 graph.ranges = !graph.ranges ? [] : graph.ranges;
                                 graph.ranges.push({
                                     id: h.id,
-                                    petId: h.cat.id,
+                                    petId: h.pet.id,
                                     ownerId: h.owner ? h.owner.id : undefined,
                                     sanctuaryId: h.sanctuary ? h.sanctuary.id : undefined,
                                     start: h.start,

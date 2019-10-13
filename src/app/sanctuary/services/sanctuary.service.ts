@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
-import { PetSanctuary, CatOwnerRange } from '../graphql.schema';
+import { PetSanctuary, PetOwnerRange } from '../graphql.schema';
 
 const sanctuariesQuery = gql`
   query {
-    catSanctuaries {
+    petSanctuaries {
       id
       name
       address {
@@ -20,7 +20,7 @@ const sanctuariesQuery = gql`
         stateProv
         zipPostal
       }
-      catInventory {
+      petInventory {
         id
         name
         breed
@@ -39,7 +39,7 @@ export class SanctuaryService {
         return this.apollo.watchQuery<any>({
             query: sanctuariesQuery
         }).valueChanges.pipe(map(sanctuaries => {
-            const result: PetSanctuary[] = sanctuaries.data.catSanctuaries;
+            const result: PetSanctuary[] = sanctuaries.data.petSanctuaries;
             const graph: SanctuaryGraph = {};
             result.forEach(s => {
                 // sanctuaries
@@ -48,7 +48,7 @@ export class SanctuaryService {
                     id: s.id,
                     name: s.name,
                     addressId: s.address.id,
-                    petIds: s.catInventory.map(c => c.id)
+                    petIds: s.petInventory.map(c => c.id)
                 });
                 // addresses
                 graph.addresses = !graph.addresses ? [] : graph.addresses;
@@ -60,7 +60,7 @@ export class SanctuaryService {
                     zipPostal: s.address.zipPostal
                 });
                 // pets
-                s.catInventory.forEach(p => {
+                s.petInventory.forEach(p => {
                     graph.pets = !graph.pets ? [] : graph.pets;
                     graph.pets.push({
                         id: p.id,
@@ -72,7 +72,7 @@ export class SanctuaryService {
                             graph.ranges = !graph.ranges ? [] : graph.ranges;
                             graph.ranges.push({
                                 id: h.id,
-                                petId: h.cat.id,
+                                petId: h.pet.id,
                                 ownerId: h.owner.id,
                                 sanctuaryId: h.sanctuary.id,
                                 start: h.start,

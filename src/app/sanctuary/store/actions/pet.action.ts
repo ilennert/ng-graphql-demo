@@ -2,11 +2,11 @@ import { createAction } from '@ngrx/store';
 
 import { Pet } from '../../model/pet';
 import { TransferPetForm } from '../../model/transfer-pet';
-import { CreateCatInput } from '../../graphql.schema';
+import { CreatePetInput } from '../../graphql.schema';
 
 export const createPet = createAction(
     '[AddEditAddressComponent] Create Pet',
-    (petInput: CreateCatInput) => ({ petInput })
+    (petInput: CreatePetInput) => ({ petInput })
 );
 
 export const createPetSuccess = createAction(

@@ -7,18 +7,18 @@ import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { TransferPetForm } from '../model/transfer-pet';
-import { Cat, CatOwnerRange, TransferPetInput } from '../graphql.schema';
+import { Pet, PetOwnerRange, TransferPetInput } from '../graphql.schema';
 
 const petsQuery = gql`
     query {
-        cats {
+        pets {
             id
             name
             age
             breed
             owners {
                 id
-                cat {
+                pet {
                     id
                 }
                 owner {
@@ -51,7 +51,7 @@ export class PetService {
         return this.apollo.watchQuery<any>({
             query: petsQuery
         }).valueChanges.pipe(map(pets => {
-            const result: Cat[] = pets.data.cats;
+            const result: Pet[] = pets.data.pets;
             const graph: SanctuaryGraph = {};
             result.forEach(p => {
                 // pets
@@ -66,7 +66,7 @@ export class PetService {
                         graph.ranges = !graph.ranges ? [] : graph.ranges;
                         graph.ranges.push({
                             id: h.id,
-                            petId: h.cat.id,
+                            petId: h.pet.id,
                             ownerId: h.owner.id,
                             sanctuaryId: h.sanctuary.id,
                             start: h.start,

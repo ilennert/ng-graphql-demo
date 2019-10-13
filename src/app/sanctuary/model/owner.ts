@@ -4,5 +4,5 @@ export interface Owner {
     name: string;
     addressIds: string[];
     birthdate?: Date;
-    catIds?: string[];
+    petIds?: string[];
 }

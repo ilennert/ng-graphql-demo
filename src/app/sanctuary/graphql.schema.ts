@@ -30,29 +30,18 @@ export class AddressUpdateInput {
     zipPostal?: string;
 }
 
-export class CatIdInput {
-    id: string;
+export class CreateOwnerInput {
+    ownerId: string;
+    sanctuaryId: string;
+    pets: PetIdInput[];
 }
 
-export class CatOwnerRangeInput {
-    catId: string;
-    ownerId?: string;
-    sanctuaryId?: string;
-    start: DateTimeInput;
-    end?: DateTimeInput;
-}
-
-export class CreateCatInput {
+export class CreatePetInput {
     id?: string;
     name: string;
     age: number;
     breed: string;
-}
-
-export class CreateOwnerInput {
-    ownerId: string;
-    sanctuaryId: string;
-    cats: CatIdInput[];
+    species: string;
 }
 
 export class CreatePetSanctuaryInput {
@@ -82,7 +71,7 @@ export class OwnerUpdateInput {
     name?: string;
     addresses?: AddressIdInput[];
     birthdate?: DateTime;
-    cats?: CatIdInput[];
+    pets?: PetIdInput[];
 }
 
 export class PersonInput {
@@ -97,8 +86,24 @@ export class PersonQueryInput {
     birthdate?: DateTimeInput;
 }
 
+export class PetIdInput {
+    id: string;
+}
+
+export class PetOwnerRangeInput {
+    petId: string;
+    ownerId?: string;
+    sanctuaryId?: string;
+    start: DateTimeInput;
+    end?: DateTimeInput;
+}
+
 export class PetSanctuaryIdInput {
     id: string;
+}
+
+export class SpeciesInput {
+    name: string;
 }
 
 export class TransferPetInput {
@@ -108,7 +113,7 @@ export class TransferPetInput {
     toOwner?: boolean;
 }
 
-export class UpdateCatInput {
+export class UpdatePetInput {
     name?: string;
     age?: number;
     breed?: string;
@@ -122,46 +127,22 @@ export class Address {
     zipPostal: string;
 }
 
-export class Cat {
-    id: string;
-    name: string;
-    age: number;
-    breed: string;
-    owners: CatOwnerRange[];
-}
-
-export class CatNHistory {
-    id: string;
-    name: string;
-    age: number;
-    breed: string;
-}
-
-export class CatOwnerRange {
-    id: string;
-    cat: CatNHistory;
-    owner?: OwnerNHistory;
-    sanctuary?: PetSanctuaryNHistory;
-    start: DateTime;
-    end?: DateTime;
-}
-
 export abstract class IMutation {
-    abstract createCat(createCatInput: CreateCatInput): Cat | Promise<Cat>;
+    abstract createPet(createPetInput: CreatePetInput): Pet | Promise<Pet>;
 
-    abstract removeCat(id: string): Cat | Promise<Cat>;
+    abstract removePet(id: string): Pet | Promise<Pet>;
 
-    abstract updateCat(id: string, updateCatInput: UpdateCatInput): Cat | Promise<Cat>;
+    abstract updatePet(id: string, updatePetInput: UpdatePetInput): Pet | Promise<Pet>;
 
     abstract createPerson(personInput: PersonInput): Person | Promise<Person>;
 
     abstract removePerson(id: string): Owner | Promise<Owner>;
 
-    abstract createCatOwner(createOwnerInput: CreateOwnerInput): Owner | Promise<Owner>;
+    abstract createPetOwner(createOwnerInput: CreateOwnerInput): Owner | Promise<Owner>;
 
     abstract createOwnerFromId(createOwner: OwnerIdInput): Owner | Promise<Owner>;
 
-    abstract createCatSanctuary(createPetSanctuaryInput: CreatePetSanctuaryInput): PetSanctuary | Promise<PetSanctuary>;
+    abstract createPetSanctuary(createPetSanctuaryInput: CreatePetSanctuaryInput): PetSanctuary | Promise<PetSanctuary>;
 
     abstract createAddress(addressInput: AddressInput): Address | Promise<Address>;
 
@@ -174,6 +155,8 @@ export abstract class IMutation {
     abstract removePersonAddress(personId: string, addressId: string): Owner | Promise<Owner>;
 
     abstract changePetOwnership(transferPetInput: TransferPetInput): PetSanctuary | Promise<PetSanctuary>;
+
+    abstract createSpecies(speciesInput?: SpeciesInput): Species | Promise<Species>;
 }
 
 export class Owner {
@@ -181,7 +164,7 @@ export class Owner {
     name: string;
     addresses: Address[];
     birthdate?: DateTime;
-    cats?: Cat[];
+    pets?: Pet[];
 }
 
 export class OwnerNHistory {
@@ -198,11 +181,36 @@ export class Person {
     birthdate?: DateTime;
 }
 
+export class Pet {
+    id: string;
+    name: string;
+    age: number;
+    breed: string;
+    species: string;
+    owners: PetOwnerRange[];
+}
+
+export class PetNHistory {
+    id: string;
+    name: string;
+    age: number;
+    breed: string;
+}
+
+export class PetOwnerRange {
+    id: string;
+    pet: PetNHistory;
+    owner?: OwnerNHistory;
+    sanctuary?: PetSanctuaryNHistory;
+    start: DateTime;
+    end?: DateTime;
+}
+
 export class PetSanctuary {
     id: string;
     name: string;
     address: Address;
-    catInventory: Cat[];
+    petInventory: Pet[];
 }
 
 export class PetSanctuaryNHistory {
@@ -218,27 +226,34 @@ export abstract class IQuery {
 
     abstract person(id: string): Owner | Promise<Owner>;
 
-    abstract cats(): Cat[] | Promise<Cat[]>;
+    abstract pets(): Pet[] | Promise<Pet[]>;
 
-    abstract cat(id: string): Cat | Promise<Cat>;
+    abstract pet(id: string): Pet | Promise<Pet>;
 
-    abstract catsWithOwners(): CatOwnerRange[] | Promise<CatOwnerRange[]>;
+    abstract petsWithOwners(): PetOwnerRange[] | Promise<PetOwnerRange[]>;
 
-    abstract catsWithoutOwners(): CatOwnerRange[] | Promise<CatOwnerRange[]>;
+    abstract petsWithoutOwners(): PetOwnerRange[] | Promise<PetOwnerRange[]>;
 
-    abstract catOwners(): Owner[] | Promise<Owner[]>;
+    abstract petOwners(): Owner[] | Promise<Owner[]>;
 
-    abstract catSanctuaries(): PetSanctuary[] | Promise<PetSanctuary[]>;
+    abstract petSanctuaries(): PetSanctuary[] | Promise<PetSanctuary[]>;
+
+    abstract species(speciesInput?: SpeciesInput): Species[] | Promise<Species[]>;
+}
+
+export class Species {
+    id: string;
+    name: string;
 }
 
 export abstract class ISubscription {
-    abstract catCreated(): Cat | Promise<Cat>;
+    abstract petCreated(): Pet | Promise<Pet>;
 
-    abstract catRemoved(): Cat | Promise<Cat>;
+    abstract petRemoved(): Pet | Promise<Pet>;
 
-    abstract catUpdated(): Cat | Promise<Cat>;
+    abstract petUpdated(): Pet | Promise<Pet>;
 
-    abstract catOwnershipChanged(): CatOwnerRange | Promise<CatOwnerRange>;
+    abstract petOwnershipChanged(): PetOwnerRange | Promise<PetOwnerRange>;
 }
 
 export type DateTime = any;
