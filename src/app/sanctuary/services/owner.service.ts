@@ -109,6 +109,7 @@ export class OwnerService {
                             name: c.name,
                             age: c.age,
                             breed: c.breed,
+                            species: c.species,
                             historyIds: c.owners && c.owners.length ? c.owners.map(h => {
                                 graph.ranges = !graph.ranges ? [] : graph.ranges;
                                 graph.ranges.push({

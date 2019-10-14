@@ -25,6 +25,7 @@ const sanctuariesQuery = gql`
         name
         breed
         age
+        species
       }
     }
   }
@@ -67,6 +68,7 @@ export class SanctuaryService {
                         name: p.name,
                         age: p.age,
                         breed: p.breed,
+                        species: p.species,
                         historyIds: p.owners ? p.owners.map(h => {
                             // history
                             graph.ranges = !graph.ranges ? [] : graph.ranges;

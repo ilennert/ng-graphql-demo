@@ -7,49 +7,68 @@ import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { TransferPetForm } from '../model/transfer-pet';
-import { Pet, PetOwnerRange, TransferPetInput } from '../graphql.schema';
-
-const petsQuery = gql`
-    query {
-        pets {
-            id
-            name
-            age
-            breed
-            owners {
-                id
-                pet {
-                    id
-                }
-                owner {
-                    id
-                }
-                sanctuary {
-                    id
-                }
-                start
-                end
-            }
-        }
-    }
-`;
-
-const changePetOwnership = gql`
-    mutation {
-        changePetOwnership (transferPetInput: $transferPetInput) {
-            id
-        }
-    }
-`;
+import { Pet, Species, PetOwnerRange, TransferPetInput, SpeciesInput } from '../graphql.schema';
 
 @Injectable()
 export class PetService {
+
+    petsQuery = gql`
+        query {
+            pets {
+                id
+                name
+                age
+                breed
+                species
+                owners {
+                    id
+                    pet {
+                        id
+                    }
+                    owner {
+                        id
+                    }
+                    sanctuary {
+                        id
+                    }
+                    start
+                    end
+                }
+            }
+        }
+    `;
+
+    speciesQuery = gql`
+        query {
+            species {
+                id
+                name
+            }
+        }
+    `;
+
+    createSpeciesMutation = gql`
+        mutation createSpecies ($speciesInput: SpeciesInput!) {
+            createSpecies (speciesInput: $speciesInput) {
+                id
+                name
+            }
+        }
+    `;
+
+    changePetOwnershipMutation = gql`
+        mutation changePetOwnership ($transferPetInput: TransferPetInput!) {
+            changePetOwnership (transferPetInput: $transferPetInput) {
+                id
+            }
+        }
+    `;
 
     constructor(private apollo: Apollo) {}
 
     getAllPetInfo(): Observable<SanctuaryGraph> {
         return this.apollo.watchQuery<any>({
-            query: petsQuery
+            query: this.petsQuery
         }).valueChanges.pipe(map(pets => {
             const result: Pet[] = pets.data.pets;
             const graph: SanctuaryGraph = {};
@@ -61,6 +80,7 @@ export class PetService {
                     name: p.name,
                     age: p.age,
                     breed: p.breed,
+                    species: p.species,
                     historyIds: p.owners && p.owners.length ? p.owners.map(h => {
                         // history
                         graph.ranges = !graph.ranges ? [] : graph.ranges;
@@ -80,9 +100,39 @@ export class PetService {
         }));
     }
 
+    getAllSpecies(): Observable<SanctuaryGraph> {
+        return this.apollo.watchQuery<any>({
+            query: this.speciesQuery
+        }).valueChanges.pipe(
+            map(s => {
+                const res: Species[] = s.data.species;
+                const graph: SanctuaryGraph = {};
+                graph.species = res;
+                return graph;
+            })
+        );
+    }
+
+    createSpecies(speciesInput: SpeciesInput): Observable<SanctuaryGraph> {
+        return this.apollo.mutate({
+            mutation: this.createSpeciesMutation,
+            variables: {
+                speciesInput
+            }
+        }).pipe(
+            map(data => {
+                const res: Species = data.data['createSpecies'];
+                console.log(res);
+                const graph: SanctuaryGraph = {};
+                graph.species = [ res ];
+                return graph;
+            })
+        );
+    }
+
     changePetOwnership(transForm: TransferPetForm): Observable<any> {
         return this.apollo.mutate({
-            mutation: changePetOwnership,
+            mutation: this.changePetOwnershipMutation,
             variables: {
                 transferPetInput: transForm
             }

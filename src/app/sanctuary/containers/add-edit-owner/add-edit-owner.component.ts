@@ -3,13 +3,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Observable } from 'rxjs';
 
 import { select, Store } from '@ngrx/store';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Address, PersonInput } from '../../graphql.schema';
 import { Owner } from '../../model/owner';
 import { states } from 'src/assets/states';
 import { State } from '../../../store';
-import * as fromComponents from '../../component';
 import * as appActions from '../../store/actions';
 import * as appSelectors from '../../store/selectors';
 import * as fromRoot from '../../../store';

@@ -4,5 +4,6 @@ export interface Pet {
     name: string;
     age: number;
     breed: string;
+    species: string;
     historyIds: string[];
 }
