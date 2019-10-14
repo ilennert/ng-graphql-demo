@@ -53,20 +53,6 @@ export class AddEditOwnerComponent implements OnInit {
         })
     });
 
-    this.lastAddress$.subscribe(
-      address => {
-        console.log(address, init);
-        if (address && !init) {
-          const inData: PersonInput = {
-            name: this.tempOwn.name,
-            addresses: [{ id: address.id}],
-            birthdate: this.tempOwn.birthdate
-          };
-          this.tempOwn.addresses = [{ id: address.id}];
-          this.store.dispatch(appActions.createOwner(inData));
-        }
-      }
-    );
     init = false;
   }
 
@@ -79,10 +65,10 @@ export class AddEditOwnerComponent implements OnInit {
     const birthdate = this.formPgp['birthdate'].value;
     this.tempOwn = {
       name: this.formPgp['name'].value,
-      addresses: [],
+      addresses: [ this.formA.value ],
       birthdate: { year: birthdate.year, month: birthdate.month, day: birthdate.day }
     };
-    this.store.dispatch(appActions.createPersonAddress(this.formA.value));
+    this.store.dispatch(appActions.createOwner(this.tempOwn));
     console.log(this.ownerForm.value);
   }
 
