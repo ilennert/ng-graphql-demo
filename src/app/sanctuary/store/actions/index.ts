@@ -5,3 +5,4 @@ export * from './history.action';
 export * from './owner.action';
 export * from './pet.action';
 export * from './site.action';
+export * from './species.action';

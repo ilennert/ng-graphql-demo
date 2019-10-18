@@ -4,7 +4,7 @@
     <div formGroupName="personGroup">
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Henry">
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Persons Name">
         </div>
         <div class="form-group">
             <label for="birthdate">Birthdate</label>
@@ -21,7 +21,7 @@
     <div formGroupName="addressGroup">
         <div class="form-group">
             <label for="street">Address</label>
-            <input type="text" class="form-control" id="street" formControlName="street"  placeholder="1234 Main St">
+            <input type="text" class="form-control" id="street" formControlName="street"  placeholder="Address">
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -48,6 +48,3 @@
         <button type="button" class="btn btn-secondary btn-right" (click)="onCancel()">Cancel</button>
     </div>
 </form>
-<!-- <hr/>
-<pre>Valid: {{ ownerForm.get('birthdate').valid }}</pre>
-<pre>errors: {{ ownerForm.get('birthdate').errors | json }}</pre> -->

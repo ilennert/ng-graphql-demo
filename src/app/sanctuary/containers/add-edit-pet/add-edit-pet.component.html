@@ -1,1 +1,32 @@
-<p>add-edit-pet works!</p>
+<h4>Create Pet</h4>
+<form [formGroup]="petForm" (ngSubmit)="onSubmit()">
+    <!--<input type="hidden" formControlName="addressId"/>-->
+    <div formGroupName="petGroup">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Pet Name">
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="text" class="form-control" id="age" formControlName="age" placeholder="9.9">
+        </div>
+        <div class="form-group">
+            <label for="breed">Breed</label>
+            <input type="text" class="form-control" id="age" formControlName="Breed" placeholder="Breed">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="species">State</label>
+            <select id="species" class="form-control" formControlName="species">
+                <option selected>Choose...</option>
+                <option *ngFor="let spec of species$ | async" [ngValue]="spec.name">
+                    {{ spec.name }}
+                </option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="form-row">
+        <button type="submit" class="btn btn-primary" [disabled]="!petForm.valid">Submit</button>
+        <button type="button" class="btn btn-secondary btn-right" (click)="onCancel()">Cancel</button>
+    </div>
+</form>

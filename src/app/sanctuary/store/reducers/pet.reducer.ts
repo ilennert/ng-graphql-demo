@@ -18,7 +18,7 @@ export const initialPetState: PetsState = adapter.getInitialState({
   loadPending: false
 });
 
-export const reducer = createReducer(
+const reducer = createReducer(
   initialPetState,
     on(petsActions.loadPetInfo, (state) => ({...state, loadPending: true })),
     on(petsActions.loadFullPetInfo, (state) => ({...state, allLoaded: false, loadPending: true })),

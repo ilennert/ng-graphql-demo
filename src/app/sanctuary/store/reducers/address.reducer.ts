@@ -18,7 +18,7 @@ export const initialAddressesState: AddressesState = adapter.getInitialState({
   lastAdded: null
 });
 
-export const reducer = createReducer(
+const reducer = createReducer(
     initialAddressesState,
     on(addressesActions.loadAddressInfo, addressesActions.createPersonAddress, (state) =>
       ({...state, loadPending: true, lastAdded: null })),

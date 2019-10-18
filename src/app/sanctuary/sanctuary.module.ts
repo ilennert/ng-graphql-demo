@@ -12,6 +12,7 @@ import { addressesReducer } from './store/reducers/address.reducer';
 import { historyReducer } from './store/reducers/history.reducer';
 import { ownersReducer } from './store/reducers/owner.reducer';
 import { petsReducer } from './store/reducers/pet.reducer';
+import { speciesReducer } from './store/reducers/species.reducer';
 import * as fromComponents from './component';
 import * as fromContainers from './containers';
 import * as fromEffects from './store/effects';
@@ -32,6 +33,7 @@ import * as fromServices from './services';
     StoreModule.forFeature('history', historyReducer),
     StoreModule.forFeature('owners', ownersReducer),
     StoreModule.forFeature('pets', petsReducer),
+    StoreModule.forFeature('species', speciesReducer),
     EffectsModule.forFeature([ ...fromEffects.effects ]),
 ],
 entryComponents: [ ...fromComponents.entryComponents ],

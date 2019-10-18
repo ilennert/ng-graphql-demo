@@ -5,3 +5,4 @@ export * from './history.selector';
 export * from './owner.selector';
 export * from './pet.selector';
 export * from './site.selector';
+export * from './species.selector';

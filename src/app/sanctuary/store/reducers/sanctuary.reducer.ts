@@ -18,7 +18,7 @@ export const initialSanctuariesState: SanctuariesState = adapter.getInitialState
   loadPending: false
 });
 
-export const reducer = createReducer(
+const reducer = createReducer(
     initialSanctuariesState,
     on(sanctuariesActions.loadSanctuaryInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
     on(sanctuariesActions.sanctuaryInfoLoaded, (state, { sanctuaries }) => {

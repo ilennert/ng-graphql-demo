@@ -12,7 +12,7 @@ export const initialSiteState: SiteState = {
     currentSanctuary: null
 };
 
-export const reducer = createReducer(
+const reducer = createReducer(
     initialSiteState,
       on(fromActions.currentSanctuarySelected, (state, { sanctuary }) => ({...state, currentSanctuary: sanctuary }))
 );

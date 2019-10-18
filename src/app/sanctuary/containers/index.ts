@@ -1,4 +1,5 @@
 
+import { SanctuaryCenterComponent } from './sanctuary-center/sanctuary-center.component';
 import { SanctuaryListComponent } from './sanctuary-list/sanctuary-list.component';
 import { SanctuaryDetailComponent } from './sanctuary-detail/sanctuary-detail.component';
 import { PetDetailComponent } from './pet-detail/pet-detail.component';
@@ -14,7 +15,8 @@ export const containers: any[] = [
     PetDetailComponent,
     PetTransferFormComponent,
     SanctuaryDetailComponent,
-    SanctuaryListComponent
+    SanctuaryListComponent,
+    SanctuaryCenterComponent
 ];
 
 export * from './pet-detail/pet-detail.component';
@@ -24,3 +26,4 @@ export * from './sanctuary-list/sanctuary-list.component';
 export * from './add-edit-owner/add-edit-owner.component';
 export * from './add-edit-pet/add-edit-pet.component';
 export * from './add-edit-sanctuary/add-edit-sanctuary.component';
+export * from './sanctuary-center/sanctuary-center.component';

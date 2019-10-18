@@ -16,7 +16,7 @@ export const initialHistoryState: HistoryState = adapter.getInitialState({
   loadPending: false
 });
 
-export const reducer = createReducer(
+const reducer = createReducer(
     initialHistoryState,
     on(historyActions.loadHistoryInfo, (state) => ({...state, loadPending: true })),
     on(historyActions.periodInfoLoaded, (state, { period }) => {

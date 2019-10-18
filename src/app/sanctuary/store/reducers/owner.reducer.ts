@@ -20,7 +20,7 @@ export const initialOwnerState: OwnersState = adapter.getInitialState({
   lastAdded: null
 });
 
-export const reducer = createReducer(
+const reducer = createReducer(
     initialOwnerState,
     on(ownersActions.loadOwnerInfo, ownersActions.createOwner, (state) => ({...state, loadPending: true, lastAdded: null })),
     on(ownersActions.loadFullOwnerInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
