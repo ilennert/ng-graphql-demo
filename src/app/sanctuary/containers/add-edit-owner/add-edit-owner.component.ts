@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { select, Store } from '@ngrx/store';
@@ -8,6 +8,7 @@ import { Address, PersonInput } from '../../graphql.schema';
 import { Owner } from '../../model/owner';
 import { states } from 'src/assets/states';
 import { State } from '../../../store';
+import { notChoose } from '../../helpers/selectHelper';
 import * as appActions from '../../store/actions';
 import * as appSelectors from '../../store/selectors';
 import * as fromRoot from '../../../store';
@@ -74,12 +75,3 @@ export class AddEditOwnerComponent implements OnInit {
     this.store.dispatch(fromRoot.back());
   }
 }
-
-export function notChoose(control: FormControl) {
-  const val: string = control.value;
-  if (val === 'Choose...') {
-    return { notChoose: true };
-  }
-  return null;
-}
-

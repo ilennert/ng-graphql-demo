@@ -15,7 +15,7 @@ export const adapter: EntityAdapter<Species> =
 
 export const initialSpeciesState: SpeciesState = adapter.getInitialState({
   loadPending: false,
-  allLoaded: null
+  allLoaded: false
 });
 
 const reducer = createReducer(
@@ -26,7 +26,7 @@ const reducer = createReducer(
     }),
     on(speciesActions.getSpecies, (state) => ({...state, allLoaded: false, loadPending: true})),
     on(speciesActions.getSpeciesLoaded, (state, { species }) => {
-        return adapter.addMany(species, {...state, allLoaded: true, loadPending: false });
+        return adapter.addAll(species, {...state, allLoaded: true, loadPending: false });
   })
 );
 

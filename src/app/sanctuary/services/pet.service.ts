@@ -107,7 +107,7 @@ export class PetService {
             map(s => {
                 const res: Species[] = s.data.species;
                 const graph: SanctuaryGraph = {};
-                graph.species = res;
+                graph.species = res.map(sp => ({id: sp.id, name: sp.name}));
                 return graph;
             })
         );
