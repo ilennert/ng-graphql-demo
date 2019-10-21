@@ -7,7 +7,13 @@ import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { TransferPetForm } from '../model/transfer-pet';
-import { Pet, Species, PetOwnerRange, TransferPetInput, SpeciesInput } from '../graphql.schema';
+import {
+    PetInput,
+    Pet,
+    Species,
+    PetOwnerRange,
+    TransferPetInput,
+    SpeciesInput } from '../graphql.schema';
 
 @Injectable()
 export class PetService {
@@ -43,6 +49,18 @@ export class PetService {
             species {
                 id
                 name
+            }
+        }
+    `;
+
+    createPetMutation = gql`
+        mutation createPet ($petInput: PetInput!) {
+            createPet (petInput: $petInput) {
+                id
+                name
+                age
+                breed
+                species
             }
         }
     `;
@@ -108,6 +126,22 @@ export class PetService {
                 const res: Species[] = s.data.species;
                 const graph: SanctuaryGraph = {};
                 graph.species = res.map(sp => ({id: sp.id, name: sp.name}));
+                return graph;
+            })
+        );
+    }
+
+    createPet(petInput: PetInput): Observable<SanctuaryGraph> {
+        return this.apollo.mutate({
+            mutation: this.createPetMutation,
+            variables: {
+                petInput
+            }
+        }).pipe(
+            map(data => {
+                const res: Pet = data.data['createPet'];
+                const graph: SanctuaryGraph = {};
+                graph.pets = [ {...res, historyIds: []} ];
                 return graph;
             })
         );

@@ -140,7 +140,6 @@ export class OwnerService {
         }).pipe(
             map(data => {
                 const res: Person = data.data['createPerson'];
-                console.log(res);
                 const graph: SanctuaryGraph = {};
                 graph.owners = [ { ...res, addressIds: res.addresses.map(a => (a.id)) } ];
                 return graph;

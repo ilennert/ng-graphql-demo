@@ -2,16 +2,16 @@ import { createAction } from '@ngrx/store';
 
 import { Pet } from '../../model/pet';
 import { TransferPetForm } from '../../model/transfer-pet';
-import { CreatePetInput } from '../../graphql.schema';
+import { PetInput } from '../../graphql.schema';
 
 export const createPet = createAction(
-    '[AddEditAddressComponent] Create Pet',
-    (petInput: CreatePetInput) => ({ petInput })
+    '[AddEditPetComponent] Create Pet',
+    (petInput: PetInput) => ({ petInput })
 );
 
 export const createPetSuccess = createAction(
     '[Sanctuary/API] Pet Create Success',
-    (petId: string) => ({ petId })
+    (pet: Pet) => ({ pet })
 );
 
 export const loadPetInfo = createAction(

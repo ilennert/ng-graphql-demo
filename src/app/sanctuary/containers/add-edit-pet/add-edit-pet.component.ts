@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { select, Store } from '@ngrx/store';
 
-import { Pet } from '../../model/pet';
+import { PetInput } from '../../graphql.schema';
 import { Species } from '../../model/species';
 import { State } from '../../../store';
 import { notChoose } from '../../helpers/selectHelper';
@@ -21,29 +21,31 @@ import * as fromRoot from '../../../store';
 export class AddEditPetComponent {
   petForm: FormGroup;
 
-  // pet$: Observable<Pet>;
   species$: Observable<Species[]>;
 
   constructor(private formbuilder: FormBuilder,
               private store: Store<State>) {
-  this.species$ = store.pipe(
-    select(appSelectors.selectAllSpecies)
-  );
+    this.species$ = store.pipe(
+      select(appSelectors.selectAllSpecies)
+    );
 
-  // this.pet$ = store.pipe(
-  //     select(appSelectors.selectLastOwnerLoaded)
-  //   );
-
-  this.petForm = this.formbuilder.group({
-    name: [null, Validators.required],
-    age: [null, Validators.required],
-    breed: [null, Validators.required],
-    species: ['Choose...', [Validators.required, notChoose]]
-  });
+    this.petForm = this.formbuilder.group({
+      name: [null, Validators.required],
+      age: [null, Validators.required],
+      breed: [null, Validators.required],
+      species: ['Choose...', [Validators.required, notChoose]]
+    });
   }
 
   onSubmit(): void {
-    console.log(this.petForm.value);
+    const form = this.petForm.value;
+    const input: PetInput = {
+      name: form.name,
+      age: parseFloat(form.age),
+      breed: form.breed,
+      species: form.species
+    };
+    this.store.dispatch(appActions.createPet(input));
   }
 
   onCancel(): void {
