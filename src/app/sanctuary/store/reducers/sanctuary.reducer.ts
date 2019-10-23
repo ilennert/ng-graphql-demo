@@ -20,7 +20,11 @@ export const initialSanctuariesState: SanctuariesState = adapter.getInitialState
 
 const reducer = createReducer(
     initialSanctuariesState,
+    on(sanctuariesActions.createSanctuary, (state) => ({ ...state, loadPending: true })),
     on(sanctuariesActions.loadSanctuaryInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
+    on(sanctuariesActions.createSanctuarySuccess, (state, { sanctuary }) => {
+      return adapter.addOne(sanctuary, { ...state, loadPending: false });
+    }),
     on(sanctuariesActions.sanctuaryInfoLoaded, (state, { sanctuaries }) => {
         return adapter.addAll(sanctuaries, {...state, allLoaded: true, loadPending: false });
   })

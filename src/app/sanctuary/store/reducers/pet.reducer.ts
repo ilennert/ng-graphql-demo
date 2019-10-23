@@ -20,17 +20,17 @@ export const initialPetState: PetsState = adapter.getInitialState({
 
 const reducer = createReducer(
   initialPetState,
-    on(petsActions.loadPetInfo, (state) => ({...state, loadPending: true })),
-    on(petsActions.loadFullPetInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
-    on(petsActions.petInfoLoaded, (state, { pet }) => {
-        return adapter.addOne(pet, state);
-    }),
-    on(petsActions.petsInfoLoaded, (state, { pets }) => {
-        return adapter.upsertMany(pets, {...state, loadPending: false });
-    }),
-    on(petsActions.fullPetsInfoLoaded, (state, { pets }) => {
-      return adapter.addAll(pets, {...state, allLoaded: true, loadPending: false });
-    })
+  on(petsActions.loadPetInfo, petsActions.createPet, (state) => ({ ...state, loadPending: true })),
+  on(petsActions.loadFullPetInfo, (state) => ({ ...state, allLoaded: false, loadPending: true })),
+  on(petsActions.petInfoLoaded, petsActions.createPetSuccess, (state, { pet }) => {
+      return adapter.addOne(pet, { ...state, loadPending: false });
+  }),
+  on(petsActions.petsInfoLoaded, (state, { pets }) => {
+      return adapter.upsertMany(pets, { ...state, loadPending: false });
+  }),
+  on(petsActions.fullPetsInfoLoaded, (state, { pets }) => {
+    return adapter.addAll(pets, { ...state, allLoaded: true, loadPending: false });
+  })
 );
 
 export function petsReducer(state = initialPetState , action: Action): PetsState {

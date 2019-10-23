@@ -102,6 +102,11 @@ export class PetSanctuaryIdInput {
     id: string;
 }
 
+export class PetSanctuaryInput {
+    name: string;
+    address: AddressInput;
+}
+
 export class SpeciesInput {
     name: string;
 }
@@ -144,6 +149,8 @@ export abstract class IMutation {
 
     abstract createPetSanctuary(createPetSanctuaryInput: CreatePetSanctuaryInput): PetSanctuary | Promise<PetSanctuary>;
 
+    abstract createPetSanctuaryFull(petSanctuaryInput: PetSanctuaryInput): PetSanctuary | Promise<PetSanctuary>;
+
     abstract createAddress(addressInput: AddressInput): Address | Promise<Address>;
 
     abstract removeAddress(id: string): Address | Promise<Address>;
@@ -154,7 +161,7 @@ export abstract class IMutation {
 
     abstract removePersonAddress(personId: string, addressId: string): Owner | Promise<Owner>;
 
-    abstract changePetOwnership(transferPetInput: TransferPetInput): PetSanctuary | Promise<PetSanctuary>;
+    abstract changePetOwnership(transferPetInput: TransferPetInput): PetOwnerRange | Promise<PetOwnerRange>;
 
     abstract createSpecies(speciesInput: SpeciesInput): Species | Promise<Species>;
 }
@@ -254,6 +261,10 @@ export abstract class ISubscription {
     abstract petUpdated(): Pet | Promise<Pet>;
 
     abstract petOwnershipChanged(): PetOwnerRange | Promise<PetOwnerRange>;
+
+    abstract personAdded(): Person | Promise<Person>;
+
+    abstract sanctuaryAdded(): PetSanctuary | Promise<PetSanctuary>;
 }
 
 export type DateTime = any;

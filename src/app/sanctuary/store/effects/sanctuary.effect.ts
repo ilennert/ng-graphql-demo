@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { mergeMap, switchMap, catchError } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
 import * as applicationActions from '../actions';
+import * as rootStore from '../../../store';
 import { SanctuaryService } from '../../services/sanctuary.service';
 
 @Injectable()
@@ -34,7 +35,35 @@ export class SanctuaryEffects {
         )
     );
 
-    constructor(
+    createSanctuary$ = createEffect(() =>
+    this.actions$.pipe(
+        ofType(applicationActions.createSanctuary),
+        mergeMap(action => {
+            applicationActions.createSanctuaryAddressInfo();
+            return this.sanctuaryService.createSanctuary(action.sanctuaryInput);
+        }),
+        tap(out => {
+            console.log(out);
+        }),
+        switchMap(sanctuaryGraph => [
+            applicationActions.addressPersonInfoLoaded(sanctuaryGraph.addresses[0]),
+            applicationActions.createSanctuarySuccess(sanctuaryGraph.sanctuaries[0])
+        ]),
+        catchError(err => {
+            console.log('Error loading/creating sanctuary entity ', err);
+            return of(applicationActions.graphLoadFail(err));
+        })
+    )
+);
+
+successCreateSanctuary$ = createEffect(() =>
+    this.actions$.pipe(
+        ofType(applicationActions.createSanctuarySuccess),
+        map(action => rootStore.back())
+    )
+);
+
+constructor(
         private actions$: Actions,
         private sanctuaryService: SanctuaryService
     ) {}

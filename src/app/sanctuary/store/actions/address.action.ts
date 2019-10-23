@@ -12,6 +12,15 @@ export const addressPersonInfoLoaded = createAction(
     (address: Address) => ({ address })
 );
 
+export const createSanctuaryAddressInfo = createAction(
+    '[AddEditSanctuaryComponent] Create Address'
+);
+
+export const addressSanctuaryInfoLoaded = createAction(
+    '[Sanctuary/API] Sanctuary Address Info Loaded',
+    (address: Address) => ({ address })
+);
+
 export const loadAddressInfo = createAction(
     '[SanctuaryListComponent] Load Address Info'
 );

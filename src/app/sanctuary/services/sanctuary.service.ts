@@ -6,39 +6,50 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
-import { PetSanctuary, PetOwnerRange } from '../graphql.schema';
-
-const sanctuariesQuery = gql`
-  query {
-    petSanctuaries {
-      id
-      name
-      address {
-        id
-        street
-        city
-        stateProv
-        zipPostal
-      }
-      petInventory {
-        id
-        name
-        breed
-        age
-        species
-      }
-    }
-  }
-`;
+import { PetSanctuary, PetSanctuaryInput } from '../graphql.schema';
 
 @Injectable()
 export class SanctuaryService {
 
+    private sanctuariesQuery = gql`
+        query {
+            petSanctuaries {
+                id
+                name
+                address {
+                    id
+                    street
+                    city
+                    stateProv
+                    zipPostal
+                }
+                petInventory {
+                    id
+                    name
+                    breed
+                    age
+                    species
+                }
+            }
+        }
+    `;
+
+    private createSanctuaryMutation = gql`
+        mutation createPetSanctuaryFull($petSanctuaryInput: PetSanctuaryInput!) {
+            createPetSanctuaryFull(petSanctuaryInput: $petSanctuaryInput) {
+                id
+                name
+                address
+                petInventory
+            }
+        }
+    `;
+
     constructor(private apollo: Apollo) {}
 
-    getAllSanctuaryInfo(): Observable<SanctuaryGraph> {
+    public getAllSanctuaryInfo(): Observable<SanctuaryGraph> {
         return this.apollo.watchQuery<any>({
-            query: sanctuariesQuery
+            query: this.sanctuariesQuery
         }).valueChanges.pipe(map(sanctuaries => {
             const result: PetSanctuary[] = sanctuaries.data.petSanctuaries;
             const graph: SanctuaryGraph = {};
@@ -87,6 +98,38 @@ export class SanctuaryService {
             });
             return graph;
         }));
+    }
+
+    public createSanctuary(sanctuaryInput: PetSanctuaryInput): Observable<SanctuaryGraph> {
+        return this.apollo.mutate({
+            mutation: this.createSanctuaryMutation,
+            variables: {
+                sanctuaryInput
+            }
+        }).pipe(
+            map(data => {
+                const res: PetSanctuary = data.data['createPetSanctuaryFull'];
+                const graph: SanctuaryGraph = {};
+                // sanctuaries
+                graph.sanctuaries = !graph.sanctuaries ? [] : graph.sanctuaries;
+                graph.sanctuaries.push({
+                    id: res.id,
+                    name: res.name,
+                    addressId: res.address.id,
+                    petIds: res.petInventory.map(c => c.id)
+                });
+                // addresses
+                graph.addresses = !graph.addresses ? [] : graph.addresses;
+                graph.addresses.push({
+                    id: res.address.id,
+                    street: res.address.street,
+                    city: res.address.city,
+                    stateProv: res.address.stateProv,
+                    zipPostal: res.address.zipPostal
+                 });
+                return graph;
+            })
+        );
     }
 
     private altOwner(graph: SanctuaryGraph): string[] {
