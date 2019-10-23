@@ -41,7 +41,7 @@ export class AddEditSanctuaryComponent {
 
   get formA() { return this.sanctuaryForm.controls['addressGroup'] as FormGroup; }
   get formS() { return this.sanctuaryForm.controls['personGroup'] as FormGroup; }
-  get formSgp() { return this.formP.controls; }
+  get formSgp() { return this.formS.controls; }
 
   onSubmit() {
     this.tempOwn = {
