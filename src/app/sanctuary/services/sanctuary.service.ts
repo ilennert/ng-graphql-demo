@@ -39,8 +39,16 @@ export class SanctuaryService {
             createPetSanctuaryFull(petSanctuaryInput: $petSanctuaryInput) {
                 id
                 name
-                address
-                petInventory
+                address {
+                    id
+                    street
+                    city
+                    stateProv
+                    zipPostal
+                }
+                petInventory {
+                    id
+                }
             }
         }
     `;
@@ -100,11 +108,11 @@ export class SanctuaryService {
         }));
     }
 
-    public createSanctuary(sanctuaryInput: PetSanctuaryInput): Observable<SanctuaryGraph> {
+    public createSanctuary(petSanctuaryInput: PetSanctuaryInput): Observable<SanctuaryGraph> {
         return this.apollo.mutate({
             mutation: this.createSanctuaryMutation,
             variables: {
-                sanctuaryInput
+                petSanctuaryInput
             }
         }).pipe(
             map(data => {
