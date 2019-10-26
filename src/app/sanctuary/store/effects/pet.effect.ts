@@ -49,8 +49,9 @@ export class PetEffects {
     successCreatePet$ = createEffect(() =>
         this.actions$.pipe(
             ofType(applicationActions.createPetSuccess),
-            map(action => rootStore.back())
-        )
+            tap(() => rootStore.back())
+        ),
+        { dispatch: false }
     );
 
     constructor(

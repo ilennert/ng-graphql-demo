@@ -27,7 +27,8 @@ const reducer = createReducer(
     }),
     on(sanctuariesActions.sanctuaryInfoLoaded, (state, { sanctuaries }) => {
         return adapter.addAll(sanctuaries, {...state, allLoaded: true, loadPending: false });
-  })
+    }),
+    on(sanctuariesActions.graphLoadFail, (state) => ({ ...state }))
 );
 
 export function sanctuariesReducer(state = initialSanctuariesState , action: Action): SanctuariesState {

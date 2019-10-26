@@ -8,6 +8,7 @@ import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as applicationActions from '../actions';
 import * as rootStore from '../../../store';
 import { SanctuaryService } from '../../services/sanctuary.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Injectable()
 export class SanctuaryEffects {
@@ -36,35 +37,44 @@ export class SanctuaryEffects {
     );
 
     createSanctuary$ = createEffect(() =>
-    this.actions$.pipe(
-        ofType(applicationActions.createSanctuary),
-        mergeMap(action => {
-            applicationActions.createSanctuaryAddressInfo();
-            return this.sanctuaryService.createSanctuary(action.sanctuaryInput);
-        }),
-        tap(out => {
-            console.log(out);
-        }),
-        switchMap(sanctuaryGraph => [
-            applicationActions.addressPersonInfoLoaded(sanctuaryGraph.addresses[0]),
-            applicationActions.createSanctuarySuccess(sanctuaryGraph.sanctuaries[0])
-        ]),
-        catchError(err => {
-            console.log('Error loading/creating sanctuary entity ', err);
-            return of(applicationActions.graphLoadFail(err));
-        })
-    )
-);
+        this.actions$.pipe(
+            ofType(applicationActions.createSanctuary),
+            mergeMap(action => {
+                applicationActions.createSanctuaryAddressInfo();
+                return this.sanctuaryService.createSanctuary(action.sanctuaryInput);
+            }),
+            tap(out => {
+                console.log(out);
+            }),
+            switchMap(sanctuaryGraph => [
+                applicationActions.addressPersonInfoLoaded(sanctuaryGraph.addresses[0]),
+                applicationActions.createSanctuarySuccess(sanctuaryGraph.sanctuaries[0])
+            ]),
+            catchError(err => {
+                console.log('Error loading/creating sanctuary entity ', err);
+                return of(applicationActions.graphLoadFail(err));
+            })
+        )
+    );
 
-successCreateSanctuary$ = createEffect(() =>
-    this.actions$.pipe(
-        ofType(applicationActions.createSanctuarySuccess),
-        map(action => rootStore.back())
-    )
-);
+    successCreateSanctuary$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.createSanctuarySuccess),
+            map(action => rootStore.back())
+        )
+    );
 
-constructor(
+    graphLoadFail$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.graphLoadFail),
+            tap(action => this.toastService.show(action.err, { classname: 'bg-danger text-light', delay: 15000 }))
+        ),
+        { dispatch: false }
+    );
+
+    constructor(
         private actions$: Actions,
-        private sanctuaryService: SanctuaryService
+        private sanctuaryService: SanctuaryService,
+        private toastService: ToastService
     ) {}
 }

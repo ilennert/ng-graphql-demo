@@ -13,7 +13,7 @@ import { historyReducer } from './store/reducers/history.reducer';
 import { ownersReducer } from './store/reducers/owner.reducer';
 import { petsReducer } from './store/reducers/pet.reducer';
 import { speciesReducer } from './store/reducers/species.reducer';
-import * as fromComponents from './component';
+import * as fromComponents from './components';
 import * as fromContainers from './containers';
 import * as fromEffects from './store/effects';
 import * as fromGuards from './guards';

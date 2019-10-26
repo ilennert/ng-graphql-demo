@@ -11,6 +11,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ToastsContainerComponent } from './components/toasts-container.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SanctuaryModule } from './sanctuary/sanctuary.module';
@@ -18,7 +19,8 @@ import { reducers, effects, metaReducers, CustomSerializer } from './store';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ToastsContainerComponent
   ],
   imports: [
     BrowserModule,
