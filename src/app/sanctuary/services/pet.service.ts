@@ -37,8 +37,7 @@ export class PetService {
                     sanctuary {
                         id
                     }
-                    start
-                    end
+                    transactionDate
                 }
             }
         }
@@ -78,6 +77,17 @@ export class PetService {
         mutation changePetOwnership ($transferPetInput: TransferPetInput!) {
             changePetOwnership (transferPetInput: $transferPetInput) {
                 id
+                pet {
+                id
+                }
+                owner {
+                id
+                }
+                sanctuary {
+                id
+                }
+                toOwner
+                transactionDate
             }
         }
     `;
@@ -107,8 +117,8 @@ export class PetService {
                             petId: h.pet.id,
                             ownerId: h.owner.id,
                             sanctuaryId: h.sanctuary.id,
-                            start: h.start,
-                            end: h.end
+                            toOwner: !!h.toOwner,
+                            transactionDate: h.transactionDate,
                         });
                         return h.id;
                     }) : this.altOwner(graph)
@@ -164,13 +174,27 @@ export class PetService {
         );
     }
 
-    changePetOwnership(transForm: TransferPetForm): Observable<any> {
+    changePetOwnership(transferPetInput: TransferPetForm): Observable<SanctuaryGraph> {
         return this.apollo.mutate({
             mutation: this.changePetOwnershipMutation,
             variables: {
-                transferPetInput: transForm
+                transferPetInput
             }
-        });
+        }).pipe(
+            map(data => {
+                const res: PetOwnerRange = data.data['changePetOwnership'];
+                const graph: SanctuaryGraph = {};
+                graph.ranges = [ {
+                    id: res.id,
+                    petId: res.pet.id,
+                    ownerId: res.owner ? res.owner.id : undefined,
+                    sanctuaryId: res.sanctuary ? res.sanctuary.id : undefined,
+                    toOwner: !!res.toOwner,
+                    transactionDate: new Date(res.transactionDate)
+                } ];
+                return graph;
+            })
+        );
     }
 
     private altOwner(graph: SanctuaryGraph): string[] {

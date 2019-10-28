@@ -41,8 +41,7 @@ export class OwnerService {
                     {
                         id
                     }
-                    start
-                    end
+                    transactionDate
                 }
             }
         }
@@ -117,8 +116,8 @@ export class OwnerService {
                                     petId: h.pet.id,
                                     ownerId: h.owner ? h.owner.id : undefined,
                                     sanctuaryId: h.sanctuary ? h.sanctuary.id : undefined,
-                                    start: h.start,
-                                    end: h.end
+                                    toOwner: !!h.toOwner,
+                                    transactionDate: h.transactionDate,
                                 });
                                 return h.id;
                             }) : this.altHistory(graph)

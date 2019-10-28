@@ -1,6 +1,12 @@
 import { createAction } from '@ngrx/store';
 
 import { Range } from '../../model/range';
+import { TransferPetInput } from '../../graphql.schema';
+
+export const changePetOwnership = createAction(
+    '[PetTransferFormComponent] Change Pet Ownership',
+    (transferPet: TransferPetInput) => ({ transferPet })
+);
 
 export const loadHistoryInfo = createAction(
     '[SanctuaryListComponent] Load History Info'

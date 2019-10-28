@@ -18,12 +18,12 @@ export const initialHistoryState: HistoryState = adapter.getInitialState({
 
 const reducer = createReducer(
     initialHistoryState,
-    on(historyActions.loadHistoryInfo, (state) => ({...state, loadPending: true })),
+    on(historyActions.loadHistoryInfo, historyActions.changePetOwnership, (state) => ({ ...state, loadPending: true })),
     on(historyActions.periodInfoLoaded, (state, { period }) => {
-        return adapter.addOne(period, state);
+        return adapter.addOne(period, { ...state, loadPending: false });
     }),
     on(historyActions.historyInfoLoaded, (state, { history }) => {
-        return adapter.upsertMany(history, {...state, loadPending: false });
+        return adapter.upsertMany(history, { ...state, loadPending: false });
   })
 );
 

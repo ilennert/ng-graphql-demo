@@ -11,7 +11,7 @@ import { OwnerService } from '../../services/owner.service';
 @Injectable()
 export class AddressEffects {
 
-    createAddress$ = createEffect(() =>
+  createAddress$ = createEffect(() =>
     this.actions$.pipe(
       ofType(applicationActions.createPersonAddress),
       mergeMap(action => this.ownerService.createAddress(action.addressInput)),

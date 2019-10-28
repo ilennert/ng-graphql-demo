@@ -96,8 +96,8 @@ export class SanctuaryService {
                                 petId: h.pet.id,
                                 ownerId: h.owner.id,
                                 sanctuaryId: h.sanctuary.id,
-                                start: h.start,
-                                end: h.end
+                                toOwner: !!h.toOwner,
+                                transactionDate: h.transactionDate,
                             });
                             return h.id;
                         }) : this.altOwner(graph)

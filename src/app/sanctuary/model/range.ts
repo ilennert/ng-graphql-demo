@@ -4,6 +4,6 @@ export interface Range {
     petId: string;
     ownerId?: string;
     sanctuaryId?: string;
-    start: Date;
-    end?: Date;
+    toOwner: boolean;
+    transactionDate: Date;
 }

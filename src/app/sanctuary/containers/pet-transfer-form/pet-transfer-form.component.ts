@@ -5,12 +5,14 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
+import * as appActions from '../../store/actions';
 import * as fromSelectors from '../../store/selectors';
 import * as fromRoot from '../../../store';
 import { Sanctuary } from '../../model/sanctuary';
 import { Owner } from '../../model/owner';
 import { Pet } from '../../model/pet';
 import { State } from '../../../store';
+import { TransferPetInput } from '../../graphql.schema';
 
 @Component({
   selector: 'app-pet-transfer-form',
@@ -27,6 +29,7 @@ export class PetTransferFormComponent {
   ownerModel: Owner;
   ownerSearchCtl = false;
   transferForm: FormGroup;
+  transferPetInput: TransferPetInput;
 
   sdirs = [
     {name: 'To', value: 'to'},
@@ -52,6 +55,7 @@ export class PetTransferFormComponent {
     );
 
     this.transferForm = this.formbuilder.group({
+      sanctuary: [null, Validators.required],
       sancdir: ['to', Validators.required],
       ownerdir: ['stray', Validators.required],
       petModel: ['', Validators.required],
@@ -80,6 +84,7 @@ export class PetTransferFormComponent {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(term => combineLatest(this.pets$, this.sanctuary$).pipe(map(([ps, sc]) => {
+        this.form['sanctuary'].setValue(sc.id);
         ps = ps.filter(p => this.xor(this.form['sancdir'].value, sc.petIds.some(pid => pid === p.id)));
         ps = term.length < 2 && term === '*'
           ? ps
@@ -133,18 +138,16 @@ export class PetTransferFormComponent {
 
   onSubmit() {
     console.log(this.transferForm.value);
-    this.petSearch(of('*'))
-      .subscribe(pets => {
-        if (pets.some(p => p === this.form['petModel'].value)) {
-          if (this.transferForm.invalid) {
-            return;
-          }
-          this.isSubmitted = true;
-          this.store.dispatch(fromRoot.back());
-        } else {
-          this.form['petModel'].setErrors({incorrect: true});
-        }
-      });
+    const pet: Pet = this.form['petModel'].value;
+    const owner: Owner = this.form['ownerModel'].value;
+    this.transferPetInput = {
+      petId: pet.id,
+      sanctuaryId: this.form['sanctuary'].value,
+      ownerId: owner ? owner.id : undefined,
+      toOwner: this.form['ownerdir'].value === 'to' ? true : undefined
+    };
+    this.store.dispatch(appActions.changePetOwnership(this.transferPetInput));
+    this.store.dispatch(fromRoot.back());
   }
 
   navBack() {
