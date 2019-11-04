@@ -1,6 +1,6 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {createEntityAdapter, EntityAdapter, EntityState, Update} from '@ngrx/entity';
 
 import { Sanctuary } from '../../model/sanctuary';
 import * as sanctuariesActions from '../actions/sanctuary.action';
@@ -24,6 +24,14 @@ const reducer = createReducer(
     on(sanctuariesActions.loadSanctuaryInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
     on(sanctuariesActions.createSanctuarySuccess, (state, { sanctuary }) => {
       return adapter.addOne(sanctuary, { ...state, loadPending: false });
+    }),
+    on(sanctuariesActions.updateSanctuaryPets, (state, { range }) => {
+      const subject = state.entities[range.sanctuaryId];
+      if (subject.petIds.some(p => p === range.petId)) {
+        return state;
+      }
+      const sanctuary: Update<Sanctuary> = { id: subject.id, changes: { petIds: [ ...subject.petIds, range.petId] } };
+      return adapter.updateOne(sanctuary, { ...state });
     }),
     on(sanctuariesActions.sanctuaryInfoLoaded, (state, { sanctuaries }) => {
         return adapter.addAll(sanctuaries, {...state, allLoaded: true, loadPending: false });

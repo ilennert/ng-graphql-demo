@@ -37,6 +37,7 @@ export class PetService {
                     sanctuary {
                         id
                     }
+                    toOwner
                     transactionDate
                 }
             }
@@ -78,13 +79,13 @@ export class PetService {
             changePetOwnership (transferPetInput: $transferPetInput) {
                 id
                 pet {
-                id
+                    id
                 }
                 owner {
-                id
+                    id
                 }
                 sanctuary {
-                id
+                    id
                 }
                 toOwner
                 transactionDate
@@ -100,28 +101,28 @@ export class PetService {
         }).valueChanges.pipe(map(pets => {
             const result: Pet[] = pets.data.pets;
             const graph: SanctuaryGraph = {};
+            graph.pets = [];
+            graph.ranges = [];
             result.forEach(p => {
                 // pets
-                graph.pets = !graph.pets ? [] : graph.pets;
                 graph.pets.push({
                     id: p.id,
                     name: p.name,
                     age: p.age,
                     breed: p.breed,
                     species: p.species,
-                    historyIds: p.owners && p.owners.length ? p.owners.map(h => {
+                    historyIds: p.owners.map(h => {
                         // history
-                        graph.ranges = !graph.ranges ? [] : graph.ranges;
                         graph.ranges.push({
                             id: h.id,
                             petId: h.pet.id,
-                            ownerId: h.owner.id,
-                            sanctuaryId: h.sanctuary.id,
+                            ownerId: h.owner ? h.owner.id : undefined,
+                            sanctuaryId: h.sanctuary ? h.sanctuary.id : undefined,
                             toOwner: !!h.toOwner,
                             transactionDate: h.transactionDate,
                         });
                         return h.id;
-                    }) : this.altOwner(graph)
+                    })
                 });
             });
             return graph;
