@@ -22,6 +22,7 @@ import { TransferPetInput } from '../../graphql.schema';
 export class PetTransferFormComponent {
 
   sanctuary$: Observable<Sanctuary>;
+  sanctuaries$: Observable<Sanctuary[]>;
   pets$: Observable<Pet[]>;
   owners$: Observable<Owner[]>;
   isSubmitted = false;
@@ -46,6 +47,9 @@ export class PetTransferFormComponent {
               private formbuilder: FormBuilder) {
     this.sanctuary$ = this.store.pipe(
       select(fromSelectors.selectCurrentSanctuary)
+    );
+    this.sanctuaries$ = this.store.pipe(
+      select(fromSelectors.selectAllSanctuaries)
     );
     this.pets$ = this.store.pipe(
       select(fromSelectors.selectAllPets)
@@ -83,8 +87,9 @@ export class PetTransferFormComponent {
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(term => combineLatest(this.pets$, this.sanctuary$).pipe(map(([ps, sc]) => {
+      switchMap(term => combineLatest(this.pets$, combineLatest(this.sanctuary$, this.sanctuaries$)).pipe(map(([ps, [sc, scs]]) => {
         this.form['sanctuary'].setValue(sc.id);
+        const otherPets = scs.filter(s => s.id !== sc.id).forEach(s => s.petIds)
         ps = ps.filter(p => this.xor(this.form['sancdir'].value, sc.petIds.some(pid => pid === p.id)));
         ps = term.length < 2 && term === '*'
           ? ps
@@ -93,6 +98,8 @@ export class PetTransferFormComponent {
         return ps.slice(0, 10);
       })))
   )
+
+  private get pre
 
   private xor(swtch: string, ctrl: boolean): boolean {
     return swtch === 'to' ? !ctrl : !!ctrl;

@@ -27,10 +27,13 @@ const reducer = createReducer(
     }),
     on(sanctuariesActions.updateSanctuaryPets, (state, { range }) => {
       const subject = state.entities[range.sanctuaryId];
-      if (subject.petIds.some(p => p === range.petId)) {
-        return state;
-      }
-      const sanctuary: Update<Sanctuary> = { id: subject.id, changes: { petIds: [ ...subject.petIds, range.petId] } };
+      const changes = !subject.petIds.some(p => p === range.petId)
+        ? { petIds: [ ...subject.petIds, range.petId] }
+        : range.toOwner
+          ? { petIds: subject.petIds.filter(p => p !== range.petId) }
+          : undefined;
+      if (!changes) { return state; }
+      const sanctuary: Update<Sanctuary> = { id: subject.id, changes };
       return adapter.updateOne(sanctuary, { ...state });
     }),
     on(sanctuariesActions.sanctuaryInfoLoaded, (state, { sanctuaries }) => {
