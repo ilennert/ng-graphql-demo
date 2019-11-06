@@ -89,8 +89,13 @@ export class PetTransferFormComponent {
       distinctUntilChanged(),
       switchMap(term => combineLatest(this.pets$, combineLatest(this.sanctuary$, this.sanctuaries$)).pipe(map(([ps, [sc, scs]]) => {
         this.form['sanctuary'].setValue(sc.id);
-        const otherPets = scs.filter(s => s.id !== sc.id).forEach(s => s.petIds)
-        ps = ps.filter(p => this.xor(this.form['sancdir'].value, sc.petIds.some(pid => pid === p.id)));
+        let otherPets: string[] = [];
+        scs.forEach(s => {
+          otherPets = [ ...otherPets, ...s.petIds];
+        });
+        const petsInSanctuaries = [ ...new Set(otherPets)];
+        const swtch = this.form['sancdir'].value;
+        ps = ps.filter(p => this.xor(swtch, this.petsSelector(swtch, sc.petIds, petsInSanctuaries).some(pid => pid === p.id)));
         ps = term.length < 2 && term === '*'
           ? ps
           : term.length < 2 ? []
@@ -99,7 +104,9 @@ export class PetTransferFormComponent {
       })))
   )
 
-  private get pre
+  private petsSelector(swtch: string, sanctuary: string[], allsanctuaries: string[]): string[] {
+    return swtch === 'to' ? allsanctuaries : sanctuary;
+  }
 
   private xor(swtch: string, ctrl: boolean): boolean {
     return swtch === 'to' ? !ctrl : !!ctrl;
