@@ -44,11 +44,7 @@
         <pre>Owner: {{ ownerModel | json }}</pre>
     </div>
     <div class="form-row">
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-success" [disabled]="!transferForm.valid">Submit</button>
-        </div>
-        <div class="col-md-3">
-            <button type="button" class="btn btn-secondary" (click)="navBack()">Cancel</button>
-        </div>
+        <button type="submit" class="btn btn-success" [disabled]="!transferForm.valid">Submit</button>
+        <button type="button" class="btn btn-secondary btn-right" (click)="navBack()">Cancel</button>
     </div>
   </form>
