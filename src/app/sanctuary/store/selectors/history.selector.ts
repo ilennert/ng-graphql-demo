@@ -30,3 +30,8 @@ export const selectHistoryByIds = (ids: string[]) => createSelector(
     selectAllHistory,
     history => history.filter(range => ids.some(ii => range.id === ii))
 );
+
+export const selectPetsChangesSubscribed = createSelector(
+    selectHistoryState,
+    historyState => historyState.petChangesSubscribed
+);

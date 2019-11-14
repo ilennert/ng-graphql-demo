@@ -12,6 +12,10 @@ export const loadHistoryInfo = createAction(
     '[SanctuaryListComponent] Load History Info'
 );
 
+export const petChangesSubscribed = createAction(
+    '[PetSubscriptionGuard] Pet Changes Subscribed'
+);
+
 export const periodInfoLoaded = createAction(
     '[Sanctuary/API] History Item Info Loaded',
     (period: Range) => ({ period })

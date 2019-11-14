@@ -93,6 +93,25 @@ export class PetService {
         }
     `;
 
+    changePetOwnershipSubscription = gql`
+        subscription petOwnershipChanged {
+            petOwnershipChanged {
+                id
+                pet {
+                    id
+                }
+                owner {
+                    id
+                }
+                sanctuary {
+                    id
+                }
+                toOwner
+                transactionDate
+            }
+        }
+    `;
+
     constructor(private apollo: Apollo) {}
 
     getAllPetInfo(): Observable<SanctuaryGraph> {
@@ -181,6 +200,26 @@ export class PetService {
             variables: {
                 transferPetInput
             }
+        }).pipe(
+            map(data => {
+                const res: PetOwnerRange = data.data['changePetOwnership'];
+                const graph: SanctuaryGraph = {};
+                graph.ranges = [ {
+                    id: res.id,
+                    petId: res.pet.id,
+                    ownerId: res.owner ? res.owner.id : undefined,
+                    sanctuaryId: res.sanctuary ? res.sanctuary.id : undefined,
+                    toOwner: !!res.toOwner,
+                    transactionDate: new Date(res.transactionDate)
+                } ];
+                return graph;
+            })
+        );
+    }
+
+    petChangesSubscribed(): Observable<SanctuaryGraph> {
+        return this.apollo.subscribe({
+            query: this.changePetOwnershipSubscription
         }).pipe(
             map(data => {
                 const res: PetOwnerRange = data.data['changePetOwnership'];

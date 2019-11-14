@@ -15,6 +15,7 @@ export const adapter: EntityAdapter<Pet> =
 
 export const initialPetState: PetsState = adapter.getInitialState({
   allLoaded: false,
+  petChangesSubscribed: false,
   loadPending: false
 });
 

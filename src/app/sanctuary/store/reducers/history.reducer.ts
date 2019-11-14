@@ -7,6 +7,7 @@ import * as historyActions from '../actions/history.action';
 
 export interface HistoryState extends EntityState<Range> {
   loadPending: boolean;
+  petChangesSubscribed: boolean;
   allLoaded: boolean;
 }
 
@@ -15,12 +16,14 @@ export const adapter: EntityAdapter<Range> =
 
 export const initialHistoryState: HistoryState = adapter.getInitialState({
   loadPending: false,
+  petChangesSubscribed: false,
   allLoaded: false
 });
 
 const reducer = createReducer(
     initialHistoryState,
     on(historyActions.loadHistoryInfo, historyActions.changePetOwnership, (state) => ({ ...state, loadPending: true, allLoaded: false })),
+    on(historyActions.petChangesSubscribed, (state) => ({ ...state, petChangesSubscribed: true })),
     on(historyActions.periodInfoLoaded, (state, { period }) => {
         return adapter.addOne(period, { ...state, loadPending: false });
     }),

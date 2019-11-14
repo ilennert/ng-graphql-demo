@@ -98,8 +98,9 @@ export class PetTransferFormComponent {
         ps = ps.filter(p => this.xor(swtch, this.petsSelector(swtch, sc.petIds, petsInSanctuaries).some(pid => pid === p.id)));
         ps = term.length < 2 && term === '*'
           ? ps
-          : term.length < 2 ? []
-          : ps.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1);
+          : term.length < 2
+            ? []
+            : ps.filter(p => p.name.toLowerCase().indexOf(term.toLowerCase()) > -1);
         return ps.slice(0, 10);
       })))
   )

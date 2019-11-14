@@ -38,6 +38,21 @@ export class HistoryEffects {
         )
     );
 
+    onPetChangesSubscribed$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.petChangesSubscribed),
+            mergeMap(() => this.petService.petChangesSubscribed()),
+            tap(out => {
+                console.log(out);
+            }),
+            map(sanctuaryGraph => applicationActions.periodInfoLoaded(sanctuaryGraph.ranges[0])),
+            catchError(err => {
+                console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
+                return of(applicationActions.graphLoadFail(err));
+            })
+        )
+    );
+
     constructor(
         private actions$: Actions,
         private petService: PetService
