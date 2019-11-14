@@ -222,7 +222,7 @@ export class PetService {
             query: this.changePetOwnershipSubscription
         }).pipe(
             map(data => {
-                const res: PetOwnerRange = data.data['changePetOwnership'];
+                const res: PetOwnerRange = data.data['petOwnershipChanged'];
                 const graph: SanctuaryGraph = {};
                 graph.ranges = [ {
                     id: res.id,

@@ -8,6 +8,7 @@ import { mergeMap, catchError, map, tap } from 'rxjs/operators';
 import * as applicationActions from '../actions';
 import { PetService } from '../../services/pet.service';
 import { Range } from '../../model/range';
+import { ToastService } from '../../../services/toast.service';
 
 @Injectable()
 export class HistoryEffects {
@@ -45,7 +46,13 @@ export class HistoryEffects {
             tap(out => {
                 console.log(out);
             }),
-            map(sanctuaryGraph => applicationActions.periodInfoLoaded(sanctuaryGraph.ranges[0])),
+            map(sanctuaryGraph => {
+                const range: Range = sanctuaryGraph.ranges[0];
+                this.toastService.show(!range.toOwner
+                    ? 'A Sanctuary has just found a new Pet to find a Home for'
+                    : 'A Sanctuary has just found a new Home for one of our Pets', { classname: 'bg-success text-light', delay: 15000 });
+                return applicationActions.periodInfoLoaded(range);
+            }),
             catchError(err => {
                 console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
                 return of(applicationActions.graphLoadFail(err));
@@ -55,6 +62,7 @@ export class HistoryEffects {
 
     constructor(
         private actions$: Actions,
-        private petService: PetService
+        private petService: PetService,
+        private toastService: ToastService
     ) {}
 }

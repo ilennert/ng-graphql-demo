@@ -8,7 +8,13 @@ import * as fromGuards from './guards';
 const routes: Routes = [
     {
         path: '',
-        canActivate: [fromGuards.SanctuariesGuard, fromGuards.OwnersGuard, fromGuards.PetsGuard, fromGuards.SpeciesGuard],
+        canActivate: [
+            fromGuards.SanctuariesGuard,
+            fromGuards.OwnersGuard,
+            fromGuards.PetsGuard,
+            fromGuards.SpeciesGuard,
+            fromGuards.HistorySubscribedGuard
+        ],
         component: fromContainers.SanctuaryCenterComponent,
         children: [
             {
