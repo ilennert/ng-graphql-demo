@@ -22,7 +22,7 @@ const reducer = createReducer(
     initialAddressesState,
     on(addressesActions.loadAddressInfo, addressesActions.createPersonAddress, (state) =>
       ({...state, loadPending: true, lastAdded: null })),
-    on(addressesActions.addressPersonInfoLoaded, (state, { address }) => {
+    on(addressesActions.addressInfoLoaded, (state, { address }) => {
         return adapter.addOne(address, {...state, loadPending: false, lastAdded: address });
     }),
     on(addressesActions.addressesInfoLoaded, (state, { addresses }) => {

@@ -17,9 +17,6 @@ export class HistoryEffects {
         this.actions$.pipe(
             ofType(applicationActions.changePetOwnership),
             mergeMap(action => this.petService.changePetOwnership(action.transferPet)),
-            tap(out => {
-                console.log(out);
-            }),
             map(sanctuaryGraph => applicationActions.periodInfoLoaded(sanctuaryGraph.ranges[0])),
             catchError(err => {
                 console.log('Error loading/creating pet history entity ', err);
@@ -43,14 +40,11 @@ export class HistoryEffects {
         this.actions$.pipe(
             ofType(applicationActions.petChangesSubscribed),
             mergeMap(() => this.petService.petChangesSubscribed()),
-            tap(out => {
-                console.log(out);
-            }),
             map(sanctuaryGraph => {
                 const range: Range = sanctuaryGraph.ranges[0];
                 this.toastService.show(!range.toOwner
                     ? 'A Sanctuary has just found a new Pet to find a Home for'
-                    : 'A Sanctuary has just found a new Home for one of our Pets', { classname: 'bg-success text-light', delay: 15000 });
+                    : 'A Sanctuary has just found a new Home for one of our Pets', { classname: 'bg-success text-light', delay: 20000 });
                 return applicationActions.periodInfoLoaded(range);
             }),
             catchError(err => {

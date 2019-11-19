@@ -7,6 +7,7 @@ import * as sanctuariesActions from '../actions/sanctuary.action';
 
 export interface SanctuariesState extends EntityState<Sanctuary> {
   allLoaded: boolean;
+  sanctuariesSubscribed: boolean;
   loadPending: boolean;
 }
 
@@ -15,6 +16,7 @@ export const adapter: EntityAdapter<Sanctuary> =
 
 export const initialSanctuariesState: SanctuariesState = adapter.getInitialState({
   allLoaded: false,
+  sanctuariesSubscribed: false,
   loadPending: false
 });
 
@@ -22,6 +24,7 @@ const reducer = createReducer(
     initialSanctuariesState,
     on(sanctuariesActions.createSanctuary, (state) => ({ ...state, loadPending: true })),
     on(sanctuariesActions.loadSanctuaryInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
+    on(sanctuariesActions.sanctuariesSubscribed, (state) => ({ ...state, sanctuariesSubscribed: true })),
     on(sanctuariesActions.createSanctuarySuccess, (state, { sanctuary }) => {
       return adapter.addOne(sanctuary, { ...state, loadPending: false });
     }),

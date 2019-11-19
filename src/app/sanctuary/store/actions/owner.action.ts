@@ -17,6 +17,10 @@ export const loadOwnerInfo = createAction(
     '[SanctuaryListComponent] Load Owner Info'
 );
 
+export const ownersSubscribed = createAction(
+    '[OwnerSubscriptionGuard]  Owner Adds Subscribed'
+);
+
 export const loadFullOwnerInfo = createAction(
     '[Owner Guard] Load Full Owner Info'
 );

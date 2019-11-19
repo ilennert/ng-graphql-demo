@@ -14,6 +14,10 @@ export const createPetSuccess = createAction(
     (pet: Pet) => ({ pet })
 );
 
+export const petsSubscribed = createAction(
+    '[PetSubscriptionGuard]  Pet Adds Subscribed'
+);
+
 export const loadPetInfo = createAction(
     '[SanctuaryListComponent] Load Pet Info'
 );

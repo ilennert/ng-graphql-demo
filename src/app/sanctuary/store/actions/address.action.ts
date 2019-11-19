@@ -7,7 +7,7 @@ export const createPersonAddress = createAction(
     (addressInput: AddressInput) => ({ addressInput })
 );
 
-export const addressPersonInfoLoaded = createAction(
+export const addressInfoLoaded = createAction(
     '[AddEditOwnerComponent] Address Info Loaded',
     (address: Address) => ({ address })
 );

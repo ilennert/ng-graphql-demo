@@ -55,6 +55,7 @@ export class OwnerService {
                 addresses {
                     id
                     street
+                    city
                     stateProv
                     zipPostal
                 }
@@ -71,6 +72,23 @@ export class OwnerService {
                 city
                 stateProv
                 zipPostal
+            }
+        }
+    `;
+
+    personAddedSubscription = gql`
+        subscription personAdded {
+            personAdded {
+                id
+                name
+                addresses {
+                    id
+                    street
+                    city
+                    stateProv
+                    zipPostal
+                }
+                birthdate
             }
         }
     `;
@@ -140,6 +158,7 @@ export class OwnerService {
             map(data => {
                 const res: Person = data.data['createPerson'];
                 const graph: SanctuaryGraph = {};
+                graph.addresses = res.addresses;
                 graph.owners = [ { ...res, addressIds: res.addresses.map(a => (a.id)) } ];
                 return graph;
             })
@@ -157,6 +176,20 @@ export class OwnerService {
                 console.log(res);
                 const graph: SanctuaryGraph = {};
                 graph.addresses = [ res ];
+                return graph;
+            })
+        );
+    }
+
+    personSubscription(): Observable<SanctuaryGraph> {
+        return this.apollo.subscribe({
+            query: this.personAddedSubscription
+        }).pipe(
+            map(data => {
+                const res: Person = data.data['personAdded'];
+                const graph: SanctuaryGraph = {};
+                graph.addresses = res.addresses;
+                graph.owners = [ { ...res, addressIds: res.addresses.map(a => (a.id)) } ];
                 return graph;
             })
         );

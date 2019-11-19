@@ -18,7 +18,7 @@ export class AddressEffects {
       tap(out => {
         console.log(out);
       }),
-      map(sanctuaryGraph => applicationActions.addressPersonInfoLoaded(sanctuaryGraph.addresses[0])),
+      map(sanctuaryGraph => applicationActions.addressInfoLoaded(sanctuaryGraph.addresses[0])),
       catchError(err => {
         console.log('Error loading/creating address entity ', err);
         return of(applicationActions.graphLoadFail(err));

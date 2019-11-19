@@ -8,6 +8,8 @@ import { map, mergeMap, switchMap, catchError, tap } from 'rxjs/operators';
 import * as applicationActions from '../actions';
 import * as rootStore from '../../../store';
 import { OwnerService } from '../../services/owner.service';
+import { ToastService } from '../../../services/toast.service';
+import { Owner } from '../../model/owner';
 
 @Injectable()
 export class OwnerEffects {
@@ -42,7 +44,10 @@ export class OwnerEffects {
             tap(out => {
                 console.log(out);
             }),
-            map(sanctuaryGraph => applicationActions.createOwnerSuccess(sanctuaryGraph.owners[0])),
+            switchMap(sanctuaryGraph => [
+                applicationActions.addressesInfoLoaded(sanctuaryGraph.addresses),
+                applicationActions.createOwnerSuccess(sanctuaryGraph.owners[0])
+            ]),
             catchError(err => {
               console.log('Error loading/creating address entity ', err);
               return of(applicationActions.graphLoadFail(err));
@@ -57,8 +62,29 @@ export class OwnerEffects {
         )
     );
 
-    constructor(
+    onOwnerAddedSubscribed$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.ownersSubscribed),
+            mergeMap(() => this.ownerService.personSubscription()),
+            switchMap(sanctuaryGraph => {
+                const owner: Owner = sanctuaryGraph.owners[0];
+                this.toastService.show(`A new Adopter has now come into our sanctuary center. We have a ${owner.name}`,
+                    { classname: 'bg-success text-light', delay: 20000 });
+                return [
+                    applicationActions.addressesInfoLoaded(sanctuaryGraph.addresses),
+                    applicationActions.createOwnerSuccess(owner)
+                ];
+            }),
+            catchError(err => {
+                console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
+                return of(applicationActions.graphLoadFail(err));
+            })
+        )
+    );
+
+constructor(
         private actions$: Actions,
-        private ownerService: OwnerService
+        private ownerService: OwnerService,
+        private toastService: ToastService
     ) {}
 }

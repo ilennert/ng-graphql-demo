@@ -24,8 +24,7 @@ export class AddEditOwnerComponent {
   states = states;
   tempOwn: PersonInput;
 
-  constructor( // private modalService: NgbModal,
-              private formbuilder: FormBuilder,
+  constructor(private formbuilder: FormBuilder,
               private store: Store<State>) {
 
     this.ownerForm = this.formbuilder.group({

@@ -7,6 +7,7 @@ import * as petsActions from '../actions/pet.action';
 
 export interface PetsState extends EntityState<Pet> {
   allLoaded: boolean;
+  petsSubscribed: boolean;
   loadPending: boolean;
 }
 
@@ -15,7 +16,7 @@ export const adapter: EntityAdapter<Pet> =
 
 export const initialPetState: PetsState = adapter.getInitialState({
   allLoaded: false,
-  petChangesSubscribed: false,
+  petsSubscribed: false,
   loadPending: false
 });
 
@@ -23,6 +24,7 @@ const reducer = createReducer(
   initialPetState,
   on(petsActions.loadPetInfo, petsActions.createPet, (state) => ({ ...state, loadPending: true })),
   on(petsActions.loadFullPetInfo, (state) => ({ ...state, allLoaded: false, loadPending: true })),
+  on(petsActions.petsSubscribed, (state) => ({ ...state, petsSubscribed: true })),
   on(petsActions.petInfoLoaded, petsActions.createPetSuccess, (state, { pet }) => {
       return adapter.addOne(pet, { ...state, loadPending: false });
   }),

@@ -18,7 +18,7 @@ import {
 @Injectable()
 export class PetService {
 
-    petsQuery = gql`
+    private petsQuery = gql`
         query {
             pets {
                 id
@@ -44,7 +44,7 @@ export class PetService {
         }
     `;
 
-    speciesQuery = gql`
+    private speciesQuery = gql`
         query {
             species {
                 id
@@ -53,7 +53,7 @@ export class PetService {
         }
     `;
 
-    createPetMutation = gql`
+    private createPetMutation = gql`
         mutation createPet ($petInput: PetInput!) {
             createPet (petInput: $petInput) {
                 id
@@ -65,7 +65,7 @@ export class PetService {
         }
     `;
 
-    createSpeciesMutation = gql`
+    private createSpeciesMutation = gql`
         mutation createSpecies ($speciesInput: SpeciesInput!) {
             createSpecies (speciesInput: $speciesInput) {
                 id
@@ -74,7 +74,7 @@ export class PetService {
         }
     `;
 
-    changePetOwnershipMutation = gql`
+    private changePetOwnershipMutation = gql`
         mutation changePetOwnership ($transferPetInput: TransferPetInput!) {
             changePetOwnership (transferPetInput: $transferPetInput) {
                 id
@@ -93,7 +93,7 @@ export class PetService {
         }
     `;
 
-    changePetOwnershipSubscription = gql`
+    private changePetOwnershipSubscription = gql`
         subscription petOwnershipChanged {
             petOwnershipChanged {
                 id
@@ -108,6 +108,27 @@ export class PetService {
                 }
                 toOwner
                 transactionDate
+            }
+        }
+    `;
+
+    private speciesCreatedSubscription = gql`
+        subscription speciesCreated {
+            speciesCreated {
+                id
+                name
+            }
+        }
+    `;
+
+    private petCreatedSubscription = gql`
+        subscription petCreated {
+            petCreated {
+                id
+                name
+                age
+                breed
+                species
             }
         }
     `;
@@ -232,6 +253,32 @@ export class PetService {
                     toOwner: !!res.toOwner,
                     transactionDate: new Date(res.transactionDate)
                 } ];
+                return graph;
+            })
+        );
+    }
+
+    speciesSubscription(): Observable<SanctuaryGraph> {
+        return this.apollo.subscribe({
+            query: this.speciesCreatedSubscription
+        }).pipe(
+            map(data => {
+                const res: Species = data.data['speciesCreated'];
+                const graph: SanctuaryGraph = {};
+                graph.species = [ res ];
+                return graph;
+            })
+        );
+    }
+
+    petSubscription(): Observable<SanctuaryGraph> {
+        return this.apollo.subscribe({
+            query: this.petCreatedSubscription
+        }).pipe(
+            map(data => {
+                const res: Pet = data.data['petCreated'];
+                const graph: SanctuaryGraph = {};
+                graph.pets = [ {...res, historyIds: []} ];
                 return graph;
             })
         );

@@ -7,6 +7,10 @@ export const createSpecies = createAction(
     (speciesInput: SpeciesInput) => ({ speciesInput })
 );
 
+export const speciesSubscribed = createAction(
+    '[SpeciesSubscriptionGuard]  Species Adds Subscribed'
+);
+
 export const speciesCreated = createAction(
     '[] New Species Created',
     (species: Species) => ({ species })

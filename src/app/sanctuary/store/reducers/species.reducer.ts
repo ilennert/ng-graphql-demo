@@ -7,6 +7,7 @@ import * as speciesActions from '../actions/species.action';
 
 export interface SpeciesState extends EntityState<Species> {
   loadPending: boolean;
+  speciesSubscribed: boolean;
   allLoaded: boolean;
 }
 
@@ -15,12 +16,14 @@ export const adapter: EntityAdapter<Species> =
 
 export const initialSpeciesState: SpeciesState = adapter.getInitialState({
   loadPending: false,
+  speciesSubscribed: false,
   allLoaded: false
 });
 
 const reducer = createReducer(
     initialSpeciesState,
     on(speciesActions.createSpecies, (state) => ({...state, loadPending: true })),
+    on(speciesActions.speciesSubscribed, (state) => ({ ...state, speciesSubscribed: true })),
     on(speciesActions.speciesCreated, (state, { species }) => {
         return adapter.addOne(species, {...state, loadPending: false });
     }),

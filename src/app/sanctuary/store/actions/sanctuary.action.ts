@@ -19,6 +19,10 @@ export const updateSanctuaryPets = createAction(
     (range: Range) => ({ range })
 );
 
+export const sanctuariesSubscribed = createAction(
+    '[SanctuarySubscriptionGuard]  Sanctuary Adds Subscribed'
+);
+
 export const loadSanctuaryInfo = createAction(
     '[SanctuaryListComponent] Load Sanctuary Info'
 );

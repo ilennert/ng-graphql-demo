@@ -7,6 +7,8 @@ import { mergeMap, catchError, map, tap } from 'rxjs/operators';
 
 import * as applicationActions from '../actions';
 import { PetService } from '../../services/pet.service';
+import { ToastService } from '../../../services/toast.service';
+import { Species } from '../../model/species';
 
 @Injectable()
 export class SpeciesEffects {
@@ -39,8 +41,26 @@ export class SpeciesEffects {
         )
     );
 
-  constructor(
-      private actions$: Actions,
-      private petService: PetService
-  ) {}
+    onSpeciesAddedSubscribed$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.speciesSubscribed),
+            mergeMap(() => this.petService.speciesSubscription()),
+            map(sanctuaryGraph => {
+                const species: Species = sanctuaryGraph.species[0];
+                this.toastService.show(`A Species of Pet is now supported by our sanctuaries. We have a ${species.name}`,
+                    { classname: 'bg-success text-light', delay: 20000 });
+                return applicationActions.speciesCreated(species);
+            }),
+            catchError(err => {
+                console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
+                return of(applicationActions.graphLoadFail(err));
+            })
+        )
+    );
+
+    constructor(
+        private actions$: Actions,
+        private petService: PetService,
+        private toastService: ToastService
+    ) {}
 }

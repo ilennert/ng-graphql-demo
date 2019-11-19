@@ -53,7 +53,26 @@ export class SanctuaryService {
         }
     `;
 
-    constructor(private apollo: Apollo) {}
+    private sanctuaryAddedSubscription = gql`
+        subscription sanctuaryAdded {
+            sanctuaryAdded {
+                id
+                name
+                address {
+                    id
+                    street
+                    city
+                    stateProv
+                    zipPostal
+                }
+                petInventory {
+                    id
+                }
+            }
+        }
+    `;
+
+constructor(private apollo: Apollo) {}
 
     public getAllSanctuaryInfo(): Observable<SanctuaryGraph> {
         return this.apollo.watchQuery<any>({
@@ -117,6 +136,35 @@ export class SanctuaryService {
         }).pipe(
             map(data => {
                 const res: PetSanctuary = data.data['createPetSanctuaryFull'];
+                const graph: SanctuaryGraph = {};
+                // sanctuaries
+                graph.sanctuaries = !graph.sanctuaries ? [] : graph.sanctuaries;
+                graph.sanctuaries.push({
+                    id: res.id,
+                    name: res.name,
+                    addressId: res.address.id,
+                    petIds: res.petInventory.map(c => c.id)
+                });
+                // addresses
+                graph.addresses = !graph.addresses ? [] : graph.addresses;
+                graph.addresses.push({
+                    id: res.address.id,
+                    street: res.address.street,
+                    city: res.address.city,
+                    stateProv: res.address.stateProv,
+                    zipPostal: res.address.zipPostal
+                 });
+                return graph;
+            })
+        );
+    }
+
+    sanctuarySubscription(): Observable<SanctuaryGraph> {
+        return this.apollo.subscribe({
+            query: this.sanctuaryAddedSubscription
+        }).pipe(
+            map(data => {
+                const res: PetSanctuary = data.data['sanctuaryAdded'];
                 const graph: SanctuaryGraph = {};
                 // sanctuaries
                 graph.sanctuaries = !graph.sanctuaries ? [] : graph.sanctuaries;
