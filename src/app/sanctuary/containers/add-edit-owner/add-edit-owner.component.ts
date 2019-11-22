@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { select, Store } from '@ngrx/store';
 
-import { Address, PersonInput } from '../../graphql.schema';
+import { Address, AddressInput, PersonInput } from '../../graphql.schema';
 import { Owner } from '../../model/owner';
 import { states } from 'src/assets/states';
 import { State } from '../../../store';
@@ -20,6 +20,7 @@ import * as fromRoot from '../../../store';
 })
 export class AddEditOwnerComponent {
   ownerForm: FormGroup;
+  addressGroup: FormArray;
 
   states = states;
   tempOwn: PersonInput;
@@ -32,24 +33,34 @@ export class AddEditOwnerComponent {
         name: [null, Validators.required],
         birthdate: [null]
       }),
-      addressGroup: this.formbuilder.group({
-        street: ['', Validators.required],
-        city: ['', Validators.required],
-        stateProv: ['Choose...', [Validators.required, notChoose]],
-        zipPostal: ['', Validators.required]
-      })
+      addressGroup: this.formbuilder.array([ this.createAddress() ])
     });
   }
 
-  get formA() { return this.ownerForm.controls['addressGroup'] as FormGroup; }
+  get formA() { return this.ownerForm.controls['addressGroup'] as FormArray; }
   get formP() { return this.ownerForm.controls['personGroup'] as FormGroup; }
   get formPgp() { return this.formP.controls; }
 
+  createAddress(): FormGroup {
+    return this.formbuilder.group({
+      street: ['', Validators.required],
+      city: ['', Validators.required],
+      stateProv: ['Choose...', [Validators.required, notChoose]],
+      zipPostal: ['', Validators.required]
+    });
+  }
+
+  addAddress(): void {
+    this.addressGroup = this.ownerForm.get('addressGroup') as FormArray;
+    this.addressGroup.push(this.createAddress());
+  }
+
   onSubmit() {
     const birthdate = this.formPgp['birthdate'].value;
+    const addresses = this.formA.value;
     this.tempOwn = {
       name: this.formPgp['name'].value,
-      addresses: [ this.formA.value ],
+      addresses,
       birthdate: { year: birthdate.year, month: birthdate.month, day: birthdate.day }
     };
     this.store.dispatch(appActions.createOwner(this.tempOwn));
@@ -57,5 +68,9 @@ export class AddEditOwnerComponent {
 
   onCancel(): void {
     this.store.dispatch(fromRoot.back());
+  }
+
+  onAddAddress(): void {
+    this.addAddress();
   }
 }

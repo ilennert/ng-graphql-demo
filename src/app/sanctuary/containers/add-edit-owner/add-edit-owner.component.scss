@@ -10,3 +10,18 @@ button.calendar, button.calendar:active {
 button.btn-right {
   margin-left: 20px;
 }
+
+div.button-row {
+  height: 40px;
+  width: 652px;
+}
+
+#previous-address-container {
+  position: absolute;
+  margin-left: 295px;
+}
+
+#add-address-container {
+  position: absolute;
+  margin-left: 445px;
+}
