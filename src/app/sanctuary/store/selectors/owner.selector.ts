@@ -29,3 +29,8 @@ export const selectLastOwnerLoaded = createSelector(
     selectOwnersState,
     ownersState => ownersState.lastAdded
 );
+
+export const selectOwnersSubscribed = createSelector(
+    selectOwnersState,
+    ownersState => ownersState.ownersSubscribed
+);

@@ -29,3 +29,8 @@ export const selectAllSpeciesLoaded = createSelector(
     selectSpeciesState,
     speciesState => speciesState.allLoaded
 );
+
+export const selectSpeciesSubscribed = createSelector(
+    selectSpeciesState,
+    speciesState => speciesState.speciesSubscribed
+);

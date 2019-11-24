@@ -29,3 +29,8 @@ export const selectAllPetsLoaded = createSelector(
     selectPetsState,
     petsState => petsState.allLoaded
 );
+
+export const selectPetsSubscribed = createSelector(
+    selectPetsState,
+    petsState => petsState.petsSubscribed
+);

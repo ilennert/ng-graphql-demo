@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
-import { Address, AddressInput, PersonInput } from '../../graphql.schema';
-import { Owner } from '../../model/owner';
+import { PersonInput } from '../../graphql.schema';
 import { states } from 'src/assets/states';
 import { State } from '../../../store';
 import { notChoose } from '../../helpers/selectHelper';
 import * as appActions from '../../store/actions';
-import * as appSelectors from '../../store/selectors';
 import * as fromRoot from '../../../store';
 
 @Component({

@@ -13,7 +13,11 @@ const routes: Routes = [
             fromGuards.OwnersGuard,
             fromGuards.PetsGuard,
             fromGuards.SpeciesGuard,
-            fromGuards.HistorySubscribedGuard
+            fromGuards.HistorySubscribedGuard,
+            fromGuards.OwnersSubscribedGuard,
+            fromGuards.PetsSubscribedGuard,
+            fromGuards.SanctuariesSubscribedGuard,
+            fromGuards.SpeciesSubscribedGuard
         ],
         component: fromContainers.SanctuaryCenterComponent,
         children: [

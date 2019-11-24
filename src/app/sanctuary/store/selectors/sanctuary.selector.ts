@@ -59,3 +59,8 @@ export const selectAllSanctuaryEntities = createSelector(
     selectSanctuariesState,
     fromSanctuary.selectEntities
 );
+
+export const selectSanctuariesSubscribed = createSelector(
+    selectSanctuariesState,
+    sanctuariesState => sanctuariesState.sanctuariesSubscribed
+);
