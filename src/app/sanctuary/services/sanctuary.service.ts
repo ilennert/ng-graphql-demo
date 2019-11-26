@@ -167,6 +167,7 @@ constructor(private apollo: Apollo) {}
                 const res: PetSanctuary = data.data['sanctuaryAdded'];
                 const graph: SanctuaryGraph = {};
                 // sanctuaries
+                graph.addresses = res.address ? [ res.address ] : [],
                 graph.sanctuaries = !graph.sanctuaries ? [] : graph.sanctuaries;
                 graph.sanctuaries.push({
                     id: res.id,
@@ -174,15 +175,6 @@ constructor(private apollo: Apollo) {}
                     addressId: res.address.id,
                     petIds: res.petInventory.map(c => c.id)
                 });
-                // addresses
-                graph.addresses = !graph.addresses ? [] : graph.addresses;
-                graph.addresses.push({
-                    id: res.address.id,
-                    street: res.address.street,
-                    city: res.address.city,
-                    stateProv: res.address.stateProv,
-                    zipPostal: res.address.zipPostal
-                 });
                 return graph;
             })
         );

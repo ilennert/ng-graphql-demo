@@ -76,7 +76,7 @@ export class OwnerEffects {
                 ];
             }),
             catchError(err => {
-                console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
+                console.log('Error loading/creating pet history entity @personSubscription ', err);
                 return of(applicationActions.graphLoadFail(err));
             })
         )

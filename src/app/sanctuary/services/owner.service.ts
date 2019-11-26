@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 
 import { SanctuaryGraph } from '../model/sanctuary-graph';
 import { Address, AddressInput, Owner, Person, PersonInput } from '../graphql.schema';
@@ -191,6 +191,10 @@ export class OwnerService {
                 graph.addresses = res.addresses;
                 graph.owners = [ { ...res, addressIds: res.addresses.map(a => (a.id)) } ];
                 return graph;
+            }),
+            catchError((err, caught) => {
+                console.log(err);
+                return caught;
             })
         );
     }

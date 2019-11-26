@@ -14,10 +14,10 @@ const routes: Routes = [
             fromGuards.PetsGuard,
             fromGuards.SpeciesGuard,
             fromGuards.HistorySubscribedGuard,
-            fromGuards.OwnersSubscribedGuard,
             fromGuards.PetsSubscribedGuard,
             fromGuards.SanctuariesSubscribedGuard,
-            fromGuards.SpeciesSubscribedGuard
+            fromGuards.SpeciesSubscribedGuard,
+            fromGuards.OwnersSubscribedGuard
         ],
         component: fromContainers.SanctuaryCenterComponent,
         children: [
