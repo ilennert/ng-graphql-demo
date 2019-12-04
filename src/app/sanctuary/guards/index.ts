@@ -6,6 +6,7 @@ import { SanctuariesGuard } from './sanctuaries.guard';
 import { SanctuaryExistsGuard } from './sanctuary-exists.guard';
 import { SpeciesGuard } from './species.guard';
 import { OwnersSubscribedGuard } from './owners-subscription.guard';
+import { PetExistsGuard } from './pet-exists.guard';
 import { PetsSubscribedGuard } from './pets-subscription.guard';
 import { SanctuariesSubscribedGuard } from './sanctuaries-subscription.guard';
 import { SpeciesSubscribedGuard } from './species-subscription.guard';
@@ -18,6 +19,7 @@ export const guards: any[] = [
     SanctuaryExistsGuard,
     SpeciesGuard,
     OwnersSubscribedGuard,
+    PetExistsGuard,
     PetsSubscribedGuard,
     SanctuariesSubscribedGuard,
     SpeciesSubscribedGuard
@@ -30,6 +32,7 @@ export * from './sanctuaries.guard';
 export * from './sanctuary-exists.guard';
 export * from './species.guard';
 export * from './owners-subscription.guard';
+export * from './pet-exists.guard';
 export * from './pets-subscription.guard';
 export * from './sanctuaries-subscription.guard';
 export * from './species-subscription.guard';

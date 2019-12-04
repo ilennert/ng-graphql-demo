@@ -84,7 +84,7 @@ export class SanctuaryEffects {
                 ];
             }),
             catchError(err => {
-                console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
+                console.log('Error loading/creating sanctury entity @sanctuarySubscription ', err);
                 return of(applicationActions.graphLoadFail(err));
             })
         )

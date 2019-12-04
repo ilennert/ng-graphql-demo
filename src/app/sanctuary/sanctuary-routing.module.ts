@@ -17,7 +17,7 @@ const routes: Routes = [
             fromGuards.PetsSubscribedGuard,
             fromGuards.SanctuariesSubscribedGuard,
             fromGuards.SpeciesSubscribedGuard,
-            fromGuards.OwnersSubscribedGuard
+            // fromGuards.OwnersSubscribedGuard
         ],
         component: fromContainers.SanctuaryCenterComponent,
         children: [
@@ -32,7 +32,7 @@ const routes: Routes = [
             },
             {
                 path: 'pet/:petId',
-                canActivate: [fromGuards.PetsGuard],
+                canActivate: [fromGuards.PetExistsGuard],
                 component: fromContainers.PetDetailComponent
             },
             {

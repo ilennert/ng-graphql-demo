@@ -1,1 +1,8 @@
-<p>pet-detail works!</p>
+
+<div *ngIf="pet$ | async as pet">
+    <h2>{{ pet.name }}</h2>
+    <h5>Is a {{ pet.species }}</h5>
+    <p *ngFor="let hid of pet.historyIds; let i = index">
+        <ngb-alert [type]="alertType[i % 6]" [dismissible]="false">{{ getHistoryItem((historyByIdD$ | async)(hid), pet) }}</ngb-alert>
+    </p>
+</div>

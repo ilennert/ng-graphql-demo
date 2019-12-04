@@ -2,8 +2,15 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import * as fromPet from '../reducers/pet.reducer';
+import * as fromRoot from '../../../store';
+import { Pet } from '../../model/pet';
 
 export const selectPetsState = createFeatureSelector<fromPet.PetsState>('pets');
+
+export const selectAllPetEntities = createSelector(
+    selectPetsState,
+    fromPet.selectEntities
+);
 
 export const selectPetById = (id: string) => createSelector(
     selectPetsState,
@@ -33,4 +40,12 @@ export const selectAllPetsLoaded = createSelector(
 export const selectPetsSubscribed = createSelector(
     selectPetsState,
     petsState => petsState.petsSubscribed
+);
+
+export const selectCurrentPet = createSelector(
+    selectAllPetEntities,
+    fromRoot.getRouterState,
+    (entities, router): Pet => {
+        return router.state && entities[router.state.params.petId];
+    }
 );

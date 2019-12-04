@@ -19,7 +19,7 @@ export const petsSubscribed = createAction(
 );
 
 export const loadPetInfo = createAction(
-    '[SanctuaryListComponent] Load Pet Info'
+    '[Sanctuary/API] Load Pet Info'
 );
 
 export const loadFullPetInfo = createAction(

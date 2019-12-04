@@ -11,6 +11,11 @@ export const selectHistoryById = (id: string) => createSelector(
     historyState => historyState.entities[id]
 );
 
+export const selectHistoryByIdD = createSelector(
+    selectHistoryState,
+    historyState => (id: string) => historyState.entities[id]
+);
+
 export const selectAllHistory = createSelector(
     selectHistoryState,
     fromHistory.selectAll
