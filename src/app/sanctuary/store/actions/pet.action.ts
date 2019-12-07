@@ -1,6 +1,7 @@
 import { createAction } from '@ngrx/store';
 
 import { Pet } from '../../model/pet';
+import { Range } from '../../model/range';
 import { TransferPetForm } from '../../model/transfer-pet';
 import { PetInput } from '../../graphql.schema';
 

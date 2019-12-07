@@ -1,9 +1,9 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
 import { Pet } from '../../model/pet';
-import * as petsActions from '../actions/pet.action';
+import * as actions from '../actions';
 
 export interface PetsState extends EntityState<Pet> {
   allLoaded: boolean;
@@ -22,16 +22,23 @@ export const initialPetState: PetsState = adapter.getInitialState({
 
 const reducer = createReducer(
   initialPetState,
-  on(petsActions.loadPetInfo, petsActions.createPet, (state) => ({ ...state, loadPending: true })),
-  on(petsActions.loadFullPetInfo, (state) => ({ ...state, allLoaded: false, loadPending: true })),
-  on(petsActions.petsSubscribed, (state) => ({ ...state, petsSubscribed: true })),
-  on(petsActions.petInfoLoaded, petsActions.createPetSuccess, (state, { pet }) => {
+  on(actions.loadPetInfo, actions.createPet, (state) => ({ ...state, loadPending: true })),
+  on(actions.loadFullPetInfo, (state) => ({ ...state, allLoaded: false, loadPending: true })),
+  on(actions.petsSubscribed, (state) => ({ ...state, petsSubscribed: true })),
+  on(actions.petInfoLoaded, actions.createPetSuccess, (state, { pet }) => {
       return adapter.addOne(pet, { ...state, loadPending: false });
   }),
-  on(petsActions.petsInfoLoaded, (state, { pets }) => {
+  on(actions.periodInfoLoaded, (state, { period }) => {
+    const subject = state.entities[period.petId];
+    const changes = { historyIds: [ ...subject.historyIds, period.id ] };
+    if (!changes) { return state; }
+    const pet: Update<Pet> = { id: subject.id, changes };
+    return adapter.updateOne(pet, { ...state });
+  }),
+  on(actions.petsInfoLoaded, (state, { pets }) => {
       return adapter.upsertMany(pets, { ...state, loadPending: false });
   }),
-  on(petsActions.fullPetsInfoLoaded, (state, { pets }) => {
+  on(actions.fullPetsInfoLoaded, (state, { pets }) => {
     return adapter.addAll(pets, { ...state, allLoaded: true, loadPending: false });
   })
 );
