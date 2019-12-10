@@ -30,7 +30,9 @@ const reducer = createReducer(
   }),
   on(actions.periodInfoLoaded, (state, { period }) => {
     const subject = state.entities[period.petId];
-    const changes = { historyIds: [ ...subject.historyIds, period.id ] };
+    const changes = !subject.historyIds.some(p => p === period.id)
+      ? { historyIds: [ ...subject.historyIds, period.id ] }
+      : undefined;
     if (!changes) { return state; }
     const pet: Update<Pet> = { id: subject.id, changes };
     return adapter.updateOne(pet, { ...state });

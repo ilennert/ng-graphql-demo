@@ -25,17 +25,6 @@ export class HistoryEffects {
         )
     );
 
-    onOwnerRangeChange$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(applicationActions.periodInfoLoaded),
-            map(action => applicationActions.updateSanctuaryPets(action.period)),
-            catchError(err => {
-                console.log('Error loading/creating pet history entity @OwnerRangeChange ', err);
-                return of(applicationActions.graphLoadFail(err));
-            })
-        )
-    );
-
     onPetChangesSubscribed$ = createEffect(() =>
         this.actions$.pipe(
             ofType(applicationActions.petChangesSubscribed),

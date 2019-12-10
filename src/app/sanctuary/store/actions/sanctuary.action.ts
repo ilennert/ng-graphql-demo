@@ -14,11 +14,6 @@ export const createSanctuarySuccess = createAction(
     (sanctuary: Sanctuary) => ({ sanctuary })
 );
 
-export const updateSanctuaryPets = createAction(
-    '[Sanctuary/API/HistoryEffects] Update Sanctuary association with Pet',
-    (range: Range) => ({ range })
-);
-
 export const sanctuariesSubscribed = createAction(
     '[SanctuarySubscriptionGuard]  Sanctuary Adds Subscribed'
 );
