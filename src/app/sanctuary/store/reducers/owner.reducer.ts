@@ -1,9 +1,9 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
 import { Owner } from '../../model/owner';
-import * as ownersActions from '../actions/owner.action';
+import * as actions from '../actions';
 
 export interface OwnersState extends EntityState<Owner> {
   allLoaded: boolean;
@@ -24,16 +24,28 @@ export const initialOwnerState: OwnersState = adapter.getInitialState({
 
 const reducer = createReducer(
     initialOwnerState,
-    on(ownersActions.loadOwnerInfo, ownersActions.createOwner, (state) => ({...state, loadPending: true, lastAdded: null })),
-    on(ownersActions.loadFullOwnerInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
-    on(ownersActions.ownersSubscribed, (state) => ({ ...state, ownwersSubscribed: true })),
-    on(ownersActions.ownerInfoLoaded, ownersActions.createOwnerSuccess, (state, { owner }) => {
+    on(actions.loadOwnerInfo, actions.createOwner, (state) => ({...state, loadPending: true, lastAdded: null })),
+    on(actions.loadFullOwnerInfo, (state) => ({...state, allLoaded: false, loadPending: true })),
+    on(actions.ownersSubscribed, (state) => ({ ...state, ownwersSubscribed: true })),
+    on(actions.ownerInfoLoaded, actions.createOwnerSuccess, (state, { owner }) => {
         return adapter.addOne(owner, {...state, loadPending: false, lastAdded: owner });
     }),
-    on(ownersActions.ownersInfoLoaded, (state, { owners }) => {
+    on(actions.periodInfoLoaded, (state, { period }) => {
+      if (!period.ownerId) { return state; }
+      const subject = state.entities[period.ownerId];
+      const changes = !subject.petIds.some(p => p === period.petId)
+      ? { petIds: [ ...subject.petIds, period.petId ] }
+      : subject.petIds.find(p => p === period.petId)
+        ? { petIds: subject.petIds.filter(p => p !== period.petId)}
+        : undefined;
+      if (!changes) { return state; }
+      const owner: Update<Owner> = { id: subject.id, changes };
+      return adapter.updateOne(owner, { ...state });
+    }),
+    on(actions.ownersInfoLoaded, (state, { owners }) => {
         return adapter.upsertMany(owners, {...state, loadPending: false });
     }),
-    on(ownersActions.ownersFullInfoLoaded, (state, { owners }) => {
+    on(actions.ownersFullInfoLoaded, (state, { owners }) => {
       return adapter.addAll(owners, {...state, allLoaded: true, loadPending: false });
     })
 );

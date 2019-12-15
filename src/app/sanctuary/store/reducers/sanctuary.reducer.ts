@@ -1,6 +1,6 @@
 
 import { createReducer, on, Action } from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState, Update} from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
 import { Sanctuary } from '../../model/sanctuary';
 import * as actions from '../actions';
@@ -29,6 +29,7 @@ const reducer = createReducer(
       return adapter.addOne(sanctuary, { ...state, loadPending: false });
     }),
     on(actions.periodInfoLoaded, (state, { period }) => {
+      if (!period.sanctuaryId) { return state; }
       const subject = state.entities[period.sanctuaryId];
       const changes = !subject.petIds.some(p => p === period.petId)
         ? { petIds: [ ...subject.petIds, period.petId] }
