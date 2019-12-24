@@ -4,6 +4,7 @@ import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/e
 
 import { Sanctuary } from '../../model/sanctuary';
 import * as actions from '../actions';
+import { sanctuaryInfoLoaded } from '../actions';
 
 export interface SanctuariesState extends EntityState<Sanctuary> {
   allLoaded: boolean;
@@ -27,6 +28,10 @@ const reducer = createReducer(
     on(actions.sanctuariesSubscribed, (state) => ({ ...state, sanctuariesSubscribed: true })),
     on(actions.createSanctuarySuccess, (state, { sanctuary }) => {
       return adapter.addOne(sanctuary, { ...state, loadPending: false });
+    }),
+    on(actions.updateSanctuarySuccess, (state, { sanctuary }) => {
+      const update: Update<Sanctuary> = { id: sanctuary.id, changes: sanctuary };
+      return adapter.updateOne(update, { ...state });
     }),
     on(actions.periodInfoLoaded, (state, { period }) => {
       if (!period.sanctuaryId) { return state; }

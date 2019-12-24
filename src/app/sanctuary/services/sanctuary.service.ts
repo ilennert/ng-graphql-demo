@@ -72,7 +72,25 @@ export class SanctuaryService {
         }
     `;
 
-constructor(private apollo: Apollo) {}
+    private sanctuaryUpdatedSubscription = gql`
+    subscription sanctuaryUpdated {
+        sanctuaryUpdated {
+            id
+            name
+            address {
+                id
+                street
+                city
+                stateProv
+                zipPostal
+            }
+            petInventory {
+                id
+            }
+        }
+    }`;
+
+    constructor(private apollo: Apollo) {}
 
     public getAllSanctuaryInfo(): Observable<SanctuaryGraph> {
         return this.apollo.watchQuery<any>({
@@ -159,7 +177,28 @@ constructor(private apollo: Apollo) {}
         );
     }
 
-    sanctuarySubscription(): Observable<SanctuaryGraph> {
+    sanctuaryAddSubscription(): Observable<SanctuaryGraph> {
+        return this.apollo.subscribe({
+            query: this.sanctuaryUpdatedSubscription
+        }).pipe(
+            map(data => {
+                const res: PetSanctuary = data.data['sanctuaryAdded'];
+                const graph: SanctuaryGraph = {};
+                // sanctuaries
+                graph.addresses = res.address ? [ res.address ] : [],
+                graph.sanctuaries = !graph.sanctuaries ? [] : graph.sanctuaries;
+                graph.sanctuaries.push({
+                    id: res.id,
+                    name: res.name,
+                    addressId: res.address.id,
+                    petIds: res.petInventory.map(c => c.id)
+                });
+                return graph;
+            })
+        );
+    }
+
+    sanctuaryUpdateSubscription(): Observable<SanctuaryGraph> {
         return this.apollo.subscribe({
             query: this.sanctuaryAddedSubscription
         }).pipe(

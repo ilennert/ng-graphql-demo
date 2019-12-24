@@ -73,7 +73,27 @@ export class SanctuaryEffects {
     onSanctuaryAddedSubscribed$ = createEffect(() =>
         this.actions$.pipe(
             ofType(applicationActions.sanctuariesSubscribed),
-            mergeMap(() => this.sanctuaryService.sanctuarySubscription()),
+            mergeMap(() => this.sanctuaryService.sanctuaryAddSubscription()),
+            switchMap(sanctuaryGraph => {
+                const sanctuary: Sanctuary = sanctuaryGraph.sanctuaries[0];
+                this.toastService.show(`A new Sanctuary is now available to support the adopters and pets. We have a ${sanctuary.name}`,
+                    { classname: 'bg-success text-light', delay: 20000 });
+                return [
+                    applicationActions.addressInfoLoaded(sanctuaryGraph.addresses[0]),
+                    applicationActions.createSanctuarySuccess(sanctuary)
+                ];
+            }),
+            catchError(err => {
+                console.log('Error loading/creating sanctury entity @sanctuarySubscription ', err);
+                return of(applicationActions.graphLoadFail(err));
+            })
+        )
+    );
+
+    onSanctuaryUpdatedSubscribed$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(applicationActions.sanctuariesSubscribed),
+            mergeMap(() => this.sanctuaryService.sanctuaryUpdateSubscription()),
             switchMap(sanctuaryGraph => {
                 const sanctuary: Sanctuary = sanctuaryGraph.sanctuaries[0];
                 this.toastService.show(`A new Sanctuary is now available to support the adopters and pets. We have a ${sanctuary.name}`,

@@ -27,6 +27,11 @@ export const sanctuaryInfoLoaded = createAction(
     (sanctuaries: Sanctuary[]) => ({ sanctuaries })
 );
 
+export const updateSanctuarySuccess = createAction(
+    '[Sanctuary/API] Sanctuary Update Success',
+    (sanctuary: Partial<Sanctuary>) => ({ sanctuary })
+);
+
 export const graphLoadFail = createAction(
     '[Sanctuary/API] Graph Load Fail',
     (err: any) => ({ err })
