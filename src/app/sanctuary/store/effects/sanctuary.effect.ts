@@ -84,7 +84,7 @@ export class SanctuaryEffects {
                 ];
             }),
             catchError(err => {
-                console.log('Error loading/creating sanctury entity @sanctuarySubscription ', err);
+                console.log('Error loading/creating sanctury entity @sanctuaryAddSubscription ', err);
                 return of(applicationActions.graphLoadFail(err));
             })
         )
@@ -96,7 +96,7 @@ export class SanctuaryEffects {
             mergeMap(() => this.sanctuaryService.sanctuaryUpdateSubscription()),
             switchMap(sanctuaryGraph => {
                 const sanctuary: Sanctuary = sanctuaryGraph.sanctuaries[0];
-                this.toastService.show(`A new Sanctuary is now available to support the adopters and pets. We have a ${sanctuary.name}`,
+                this.toastService.show(`${sanctuary.name}, Was updated`,
                     { classname: 'bg-success text-light', delay: 20000 });
                 return [
                     applicationActions.addressInfoLoaded(sanctuaryGraph.addresses[0]),
@@ -104,7 +104,7 @@ export class SanctuaryEffects {
                 ];
             }),
             catchError(err => {
-                console.log('Error loading/creating sanctury entity @sanctuarySubscription ', err);
+                console.log('Error updating sanctury entity @sanctuaryUpdateSubscription ', err);
                 return of(applicationActions.graphLoadFail(err));
             })
         )

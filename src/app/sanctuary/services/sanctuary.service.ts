@@ -179,7 +179,7 @@ export class SanctuaryService {
 
     sanctuaryAddSubscription(): Observable<SanctuaryGraph> {
         return this.apollo.subscribe({
-            query: this.sanctuaryUpdatedSubscription
+            query: this.sanctuaryAddedSubscription
         }).pipe(
             map(data => {
                 const res: PetSanctuary = data.data['sanctuaryAdded'];
@@ -200,10 +200,10 @@ export class SanctuaryService {
 
     sanctuaryUpdateSubscription(): Observable<SanctuaryGraph> {
         return this.apollo.subscribe({
-            query: this.sanctuaryAddedSubscription
+            query: this.sanctuaryUpdatedSubscription
         }).pipe(
             map(data => {
-                const res: PetSanctuary = data.data['sanctuaryAdded'];
+                const res: PetSanctuary = data.data['sanctuaryUpdated'];
                 const graph: SanctuaryGraph = {};
                 // sanctuaries
                 graph.addresses = res.address ? [ res.address ] : [],

@@ -30,17 +30,9 @@ const reducer = createReducer(
     on(actions.ownerInfoLoaded, actions.createOwnerSuccess, (state, { owner }) => {
         return adapter.addOne(owner, {...state, loadPending: false, lastAdded: owner });
     }),
-    on(actions.periodInfoLoaded, (state, { period }) => {
-      if (!period.ownerId) { return state; }
-      const subject = state.entities[period.ownerId];
-      const changes = !subject.petIds.some(p => p === period.petId)
-      ? { petIds: [ ...subject.petIds, period.petId ] }
-      : subject.petIds.find(p => p === period.petId)
-        ? { petIds: subject.petIds.filter(p => p !== period.petId)}
-        : undefined;
-      if (!changes) { return state; }
-      const owner: Update<Owner> = { id: subject.id, changes };
-      return adapter.updateOne(owner, { ...state });
+    on(actions.updateOwnerSuccess, (state, { owner }) => {
+      const update: Update<Owner> = { id: owner.id, changes: owner };
+      return adapter.updateOne(update, { ...state });
     }),
     on(actions.ownersInfoLoaded, (state, { owners }) => {
         return adapter.upsertMany(owners, {...state, loadPending: false });

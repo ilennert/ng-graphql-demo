@@ -35,6 +35,11 @@ export const ownersInfoLoaded = createAction(
     (owners: Owner[]) => ({ owners })
 );
 
+export const updateOwnerSuccess = createAction(
+    '[Sanctuary/API] Owner Update Success',
+    (owner: Partial<Owner>) => ({ owner })
+);
+
 export const ownersFullInfoLoaded = createAction(
     '[Sanctuary/API] Owners Full Info Loaded',
     (owners: Owner[]) => ({ owners })
