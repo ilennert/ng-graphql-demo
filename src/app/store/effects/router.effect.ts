@@ -1,10 +1,9 @@
 
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import * as routerActions from '../actions/router.action';
