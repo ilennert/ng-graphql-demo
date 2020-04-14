@@ -33,7 +33,8 @@ export class SanctuaryExistsGuard implements CanActivate {
   }
 
   checkStore(): Observable<boolean> {
-    return this.store.select(fromSelectors.selectAllSanctuariesLoaded).pipe(
+    return this.store.pipe(
+      select(fromSelectors.selectAllSanctuariesLoaded),
       tap(loaded => {
         if (!loaded) {
           this.store.dispatch(fromActions.loadSanctuaryInfo());
